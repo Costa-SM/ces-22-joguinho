@@ -1,3 +1,4 @@
+from turtle import width
 import pygame
 from utils import WIDTH, HEIGHT, BLACK
 
@@ -19,7 +20,12 @@ class Game():
         self.screen.set_caption("Game")
       #  self.icon.load('icon.png')
       #  self.screen.set_icon(self.icon)
-        self.window.fill(BLACK)
+
+        # Set the window color to white
+        self.window.fill(pygame.Color('white'))
+
+        # Create surface for drawing objects
+        self.surface = pygame.Surface((WIDTH, HEIGHT))
 
     def update(self):
         # Quit Button
@@ -31,6 +37,5 @@ class Game():
 
     def render(self):
         self.screen.flip()
-
 
     
