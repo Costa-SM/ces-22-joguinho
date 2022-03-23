@@ -1,6 +1,4 @@
-from asyncio.windows_events import NULL
 import os
-from matplotlib import animation
 import pygame as pg
 
 from utils import ASSETS_DIR
