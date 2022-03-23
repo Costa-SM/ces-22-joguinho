@@ -31,7 +31,7 @@ class Fultano(pg.sprite.Sprite):
         self.jumped = False
         self.attacking = False
 
-    def update(self):
+    def update(self, speed):
         '''
         Updates Fultano
         '''
