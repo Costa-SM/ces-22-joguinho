@@ -10,4 +10,3 @@ while game.running:
     game.render()
     
     # Updating the game
-    
