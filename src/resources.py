@@ -20,6 +20,7 @@ def load_sprite(folder_name, scale = 1):
 
     # Set the list that will have all the animations for the entity
     animation_set = {}
+    temp_key = animation_folders[0]
 
     # Load the frames into a list, and that list onto another list
     for folder in animation_folders:
@@ -37,7 +38,7 @@ def load_sprite(folder_name, scale = 1):
 
         animation_set[folder] = current_animation
 
-    return animation_set, animation_set[0][0].get_rect()
+    return animation_set, animation_set[temp_key][0].get_rect()
 
 
 #def load_sound(file_name):
