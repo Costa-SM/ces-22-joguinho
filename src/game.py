@@ -1,9 +1,6 @@
-from turtle import width
 import pygame as pg
 from game_entities.fultano import Fultano
 from utils import WIDTH, HEIGHT, BLACK
-
-import rohan
 
 pg.init()
 
@@ -24,8 +21,6 @@ class Game():
 
     def initWindow(self):
         self.screen.set_caption("Game")
-      #  self.icon.load('icon.png')
-      #  self.screen.set_icon(self.icon)
 
         # Set the window color to white
         self.window.fill(pg.Color('white'))
