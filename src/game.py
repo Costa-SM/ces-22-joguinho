@@ -1,5 +1,4 @@
 from turtle import width
-from matplotlib.pyplot import spring
 import pygame as pg
 from game_entities.fultano import Fultano
 from utils import WIDTH, HEIGHT, BLACK

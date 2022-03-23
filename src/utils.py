@@ -13,3 +13,4 @@ ASSETS_DIR = os.path.join(BASE_PATH, 'assets')
 
 IDLE = 0
 JUMP = 1
+RUN = 2

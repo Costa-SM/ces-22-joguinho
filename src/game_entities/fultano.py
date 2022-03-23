@@ -16,20 +16,15 @@ class Fultano(pg.sprite.Sprite):
         self.speed = vec(0, 0)
 
         # Sprite Loading
-        self.sprites = []
-        self.idleSprites = []
-        for sprite in os.listdir(os.path.join(ASSETS_DIR,'fultano/idle')):
-            sprite = os.path.join(ASSETS_DIR,'fultano/idle',sprite)
-            self.idleSprites.append(pg.image.load(sprite))    
-
-        self.currentSprite = 0
-        self.image = self.idleSprites[self.currentSprite]
-        self.image2 = pg.transform.scale(self.image, (200,148))
-        self.rect = self.image2.get_rect()
-        self.rect.topleft = [self.pos.x, self.pos.y]
-
+        self.sprites, self.rect = load_sprite('fultano')
         self.states = ['idle', 'jump', 'run', 'attack']
         self.currentState = 0
+        self.currentSprite = 0
+        self.image = self.sprites[self.currentState][self.currentSprite]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = [self.pos.x, self.pos.y]
+
+        
 
 
     def update(self):
@@ -38,9 +33,9 @@ class Fultano(pg.sprite.Sprite):
         '''
         self.currentState = 0
         self.currentSprite = self.currentSprite + 0.1
-        if self.currentSprite >= len(self.idleSprites):
+        if self.currentSprite >= len(self.sprites[self.currentState]):
             self.currentSprite = 0        
-        self.image = self.idleSprites[int(self.currentSprite)]
+        self.image = self.sprites[self.currentState][int(self.currentSprite)]
         self.updatePosition()
 
 
