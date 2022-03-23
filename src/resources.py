@@ -18,7 +18,7 @@ def load_sprite(folder_name, scale = 1):
     animation_folders = os.listdir(os.path.join(ASSETS_DIR, folder_name))
     
     # Set the list that will have all the animations for the entity
-    animation_set = []
+    animation_set = {}
 
     # Load the frames into a list, and that list onto another list
     for folder in animation_folders:
@@ -32,7 +32,7 @@ def load_sprite(folder_name, scale = 1):
             size = (size[0] * scale, size[1] * scale)
             current_animation[last_index] = pg.transform.scale(current_animation[last_index], size)
 
-        animation_set.append(current_animation)
+        animation_set[folder] = current_animation
 
     return animation_set, animation_set[0][0].get_rect()
 
