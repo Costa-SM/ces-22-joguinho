@@ -15,16 +15,19 @@ def load_sprite(folder_name, scale = 1):
     
     '''
     # Get the full path name and load the image
-    animation_folders = os.listdir(os.path.join(ASSETS_DIR, folder_name))
-    
+    entity_folder = os.path.join(ASSETS_DIR, folder_name)
+    animation_folders = os.listdir(entity_folder)
+
     # Set the list that will have all the animations for the entity
     animation_set = {}
 
     # Load the frames into a list, and that list onto another list
     for folder in animation_folders:
         current_animation = []
-        for file in os.listdir(folder):
-            current_animation.append(pg.image.load(file).convert())
+        current_folder = os.path.join(entity_folder, folder)
+
+        for file in os.listdir(current_folder):
+            current_animation.append(pg.image.load(os.path.join(current_folder, file)).convert_alpha())
             last_index = len(current_animation) - 1
             
             # Scale the image
