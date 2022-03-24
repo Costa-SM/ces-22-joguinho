@@ -3,7 +3,7 @@ from game_entities.fultano import Fultano
 from game_entities.monster import Monster
 from game_scenery.camera import CameraGroup
 from utils import WIDTH, HEIGHT, BLACK
-from menus import pause
+from menus import main, pause
 
 pg.init()
 
@@ -21,10 +21,11 @@ class Game():
 
         # Boolean game variables
         self.running = True
+        self.start = False
         self.paused = False
         
         # Game instances
-        self.fultano = Fultano()
+        self.fultano = Fultano(200, 600)
         self.monster = Monster(500, 600 - 85)
 
         # Creating sprite groups
@@ -40,13 +41,15 @@ class Game():
 
     def update(self):
         # Quit Button
+        if not self.start:
+            self.start = main(self.start, self.screen, self.window, self.time)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.paused = True
-                    pause(self.paused, self.screen, self.window, self.time)
+                    self.paused = pause(self.paused, self.screen, self.window, self.time)
 
         self.sprites.update(0.1)
         self.camera.update(0.1) 

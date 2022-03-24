@@ -1,23 +1,35 @@
 import pygame as pg
 from resources import Button
 
-def pause(paused, screen, window, clock):
-    while paused:
+
+def main(start, screen, window, clock):
+    play = Button(500, 400, ' Play', window)
+    window.fill((28, 48, 111))
+    while not start:
+        if play.draw_button():
+            start = True
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    paused = False
-                elif event.type == pg.QUIT:
-                    pg.quit()
-        window.fill("white")
-        resume = Button(200, 200, 'Resume', window)
-        buttonSprite = pg.sprite.Group()
-        buttonSprite.add(resume)
-        buttonSprite.draw(window)
-
-        resume.draw_button()
         screen.update()
-        clock.Clock().tick(60)     
+        clock.Clock().tick(60)
+    
+    return start 
+
+
+
+def pause(paused, screen, window, clock):
+    resume = Button(500, 400, 'Resume', window)
+    while paused:
+        window.fill((28, 48, 111))
+        if resume.draw_button():
+            paused = False  
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+            if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or resume.draw_button():    
+                paused = False
+        screen.update()
+        clock.Clock().tick(60)
+    return paused
 

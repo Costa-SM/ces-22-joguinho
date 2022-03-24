@@ -1,7 +1,8 @@
 import os
 import pygame as pg
+from sympy import re
 
-from utils import ASSETS_DIR
+from utils import ASSETS_DIR, FONTS_DIR
 
 def load_sprite(folder_name, scale = 1):
     '''
@@ -53,12 +54,15 @@ class Button(pg.sprite.Sprite):
         self.text = text
         self.window = window
 
-        self.font = pg.font.SysFont('Constantia', 30)
+        self.fontDir = os.path.join(FONTS_DIR, 'manaspc.ttf')
+        self.font = pg.font.Font(self.fontDir, 20)
         self.text_col = pg.Color('black')
         
         self.mousePos = pg.mouse.get_pos()
         self.sprites, self.rect = load_sprite('buttons')
         self.image = self.sprites['default'][0]
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = (self.x, self.y)
 
         self.clicked = False
         self.action = False
@@ -67,20 +71,22 @@ class Button(pg.sprite.Sprite):
 
         self.action = False
         self.rect.midbottom = (self.x, self.y)
-
+        self.mousePos = pg.mouse.get_pos()
         if self.rect.collidepoint(self.mousePos):
             if pg.mouse.get_pressed()[0] == 1:
                 self.clicked = True
                 self.image = self.sprites['pressed'][0]
             elif pg.mouse.get_pressed()[0] == 0 and self.clicked == True:
-                self.clicked = False
-                self.action = True
+                if self.rect.collidepoint(self.mousePos):
+                    self.clicked = False
+                    self.action = True
             #else:
             # Hover button behavior  
-
+        buttonSprite = pg.sprite.Group()
+        buttonSprite.add(self)
+        buttonSprite.draw(self.window)
         text_img = self.font.render(self.text, True, self.text_col)
         text_len = text_img.get_width()
-        self.window.blit(text_img, (self.x + int(self.rect.width/2) - int(text_len/2), self.y + 5))
+        self.window.blit(text_img, (self.x - int(self.rect.width/1.75) + int(text_len/2), self.y - self.rect.height/1.5))
+
         return self.action
-
-
