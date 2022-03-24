@@ -89,10 +89,10 @@ class Fultano(pg.sprite.Sprite):
         self.dy += self.vel.y
 
         self.pos.x += self.dx
-        if self.pos.y + self.dy <= HEIGHT:
+        if self.pos.y + self.dy <= self.initialPos[1]:
             self.pos.y += self.dy   
-        if self.rect.bottom > HEIGHT:
-            self.pos.y = HEIGHT
+        if self.rect.bottom > self.initialPos[1]:
+            self.pos.y = self.initialPos[1]
         self.rect.midbottom = self.pos
 
         

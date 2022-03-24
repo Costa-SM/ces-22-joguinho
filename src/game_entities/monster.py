@@ -3,34 +3,34 @@ import resources
 from utils import *
 
 class Monster(pg.sprite.Sprite):
-  """
-  Represents a monster
-  """
-  def __init__(self, pos_x, pos_y):
     """
-    Creates a monster
-
-    :param position: the position of the monster
-    :type position: 2x1 int vector
+    Represents a monster
     """
-    super().__init__()
-    self.sprites, self.rect = resources.load_sprite('skeleton', 2)
-    self.current_state = 'ready'
-    self.current_sprite = 0
-    self.img = self.sprites[self.current_state][self.current_sprite]
-    self.image = pg.transform.flip(self.img, 1, 0)
+    def __init__(self, pos_x, pos_y):
+        """
+        Creates a monster
 
-    self.rect.topleft = [pos_x, pos_y]
+        :param position: the position of the monster
+        :type position: 2x1 int vector
+        """
+        super().__init__()
+        self.sprites, self.rect = resources.load_sprite('skeleton', 2)
+        self.current_state = 'ready'
+        self.current_sprite = 0
+        self.img = self.sprites[self.current_state][self.current_sprite]
+        self.image = pg.transform.flip(self.img, 1, 0)
 
-    self.speed = 0
-    self.health = 30
-    self.damage = 20
+        self.rect.topleft = [pos_x, pos_y]
 
-  def update(self, speed):
-    self.current_sprite += speed
+        self.speed = 0
+        self.health = 30
+        self.damage = 20
 
-    if self.current_sprite >= len(self.sprites[self.current_state]):
-      self.current_sprite = 0
+    def update(self, speed):
+        self.current_sprite += speed
 
-    self.img = self.sprites[self.current_state][int(self.current_sprite)]
-    self.image = pg.transform.flip(self.img, 1, 0)
+        if self.current_sprite >= len(self.sprites[self.current_state]):
+            self.current_sprite = 0
+
+        self.img = self.sprites[self.current_state][int(self.current_sprite)]
+        self.image = pg.transform.flip(self.img, 1, 0)
