@@ -5,6 +5,7 @@ vec = pg.Vector2
 
 WIDTH = 1000 # Screen's width
 HEIGHT = 600 # Screen's height
+TILE_SIZE = 50 # Size of each tile
 BLACK = (0,0,0) # Black color
 
 BASE_PATH = os.path.abspath(os.path.join(os.path.abspath(os.path.join(__file__, os.pardir)), os.pardir))
