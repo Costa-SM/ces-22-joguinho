@@ -2,6 +2,7 @@ import pygame as pg
 from game_entities.fultano import Fultano
 from game_entities.monster import Monster
 from utils import WIDTH, HEIGHT, BLACK
+from menus import pause
 
 pg.init()
 
@@ -11,12 +12,21 @@ class Game():
         self.initWindow()
 
     def initVariables(self):
+
+        # Game screen
         self.screen = pg.display
         self.window = self.screen.set_mode((WIDTH,HEIGHT))
         self.time = pg.time
+
+        # Boolean game variables
         self.running = True
+        self.paused = False
+        
+        # Game instances
         self.fultano = Fultano()
         self.monster = Monster(500, 600 - 85)
+
+        # Creating sprite groups
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.fultano)
         self.sprites.add(self.monster)
@@ -29,6 +39,10 @@ class Game():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.running = False
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_ESCAPE:
+                    self.paused = True
+                    pause(self.paused, self.screen, self.window, self.time)
 
         self.sprites.update(0.1)        
         self.time.Clock().tick(60)

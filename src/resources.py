@@ -40,6 +40,47 @@ def load_sprite(folder_name, scale = 1):
 
     return animation_set, animation_set[temp_key][0].get_rect()
 
-
 #def load_sound(file_name):
+
+class Button(pg.sprite.Sprite):
+    '''
+    Class that represents a button.
+    '''
+    def __init__(self, x, y, text, window):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.text = text
+        self.window = window
+
+        self.font = pg.font.SysFont('Constantia', 30)
+        self.text_col = pg.Color('black')
+        
+        self.mousePos = pg.mouse.get_pos()
+        self.sprites, self.rect = load_sprite('buttons')
+        self.image = self.sprites['default'][0]
+
+        self.clicked = False
+        self.action = False
+
+    def draw_button(self):
+
+        self.action = False
+        self.rect.midbottom = (self.x, self.y)
+
+        if self.rect.collidepoint(self.mousePos):
+            if pg.mouse.get_pressed()[0] == 1:
+                self.clicked = True
+                self.image = self.sprites['pressed'][0]
+            elif pg.mouse.get_pressed()[0] == 0 and self.clicked == True:
+                self.clicked = False
+                self.action = True
+            #else:
+            # Hover button behavior  
+
+        text_img = self.font.render(self.text, True, self.text_col)
+        text_len = text_img.get_width()
+        self.window.blit(text_img, (self.x + int(self.rect.width/2) - int(text_len/2), self.y + 5))
+        return self.action
+
 
