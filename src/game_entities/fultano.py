@@ -1,4 +1,3 @@
-import os
 from turtle import pos
 import pygame as pg
 from utils import *
@@ -92,9 +91,4 @@ class Fultano(pg.sprite.Sprite):
             self.pos.y = HEIGHT
         self.rect.midbottom = self.pos
 
-  #  def draw(self, window):
-  #      '''
-  #      Draws Fultano
-  #      '''
-  #      window.blit(self.surf, self.rect)
         
