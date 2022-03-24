@@ -14,8 +14,9 @@ class Fultano(pg.sprite.Sprite):
         self.dy = 0
         self.stepLength = 5
         self.jumpHigh = 15
+        self.initialPos = vec(x_pos, y_pos)
         self.oldPos = vec(x_pos, y_pos)
-        self.pos = vec(100, 600)
+        self.pos = self.oldPos
         self.vel = vec(0, 0)
         
         # Sprite Loading
@@ -71,6 +72,9 @@ class Fultano(pg.sprite.Sprite):
             self.running = True
             self.image = pg.transform.flip(self.image, 1, 0)
             self.pos.x = self.pos.x - self.stepLength
+            if self.pos.x <= self.initialPos.x:
+                self.pos.x = self.initialPos.x
+
         elif key_input[pg.K_c]:
             self.attacking = True
             self.currentState = 'attack_1'
