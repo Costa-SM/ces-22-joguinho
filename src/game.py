@@ -15,7 +15,7 @@ class Game():
         self.window = self.screen.set_mode((WIDTH,HEIGHT))
         self.time = pg.time
         self.running = True
-        self.fultano = Fultano()
+        self.fultano = Fultano(100, 600)
         self.monster = Monster(500, 600 - 85)
         self.sprites = pg.sprite.Group()
         self.sprites.add(self.fultano)
