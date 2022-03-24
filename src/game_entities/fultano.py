@@ -30,6 +30,9 @@ class Fultano(pg.sprite.Sprite):
         self.running = False
         self.jumped = False
         self.attacking = False
+        self.fultano_direction = 'right'
+        self.times_jumped = 0
+        self.max_jumps = 3
 
     def update(self, speed):
         '''
@@ -44,8 +47,13 @@ class Fultano(pg.sprite.Sprite):
 
         self.currentSprite = self.currentSprite + speed
         if self.currentSprite >= len(self.sprites[self.currentState]):
-            self.currentSprite = 0        
-        self.image = self.sprites[self.currentState][int(self.currentSprite)]
+            self.currentSprite = 0
+
+        self.image = self.sprites[self.currentState][int(self.currentSprite)]  
+
+        if self.fultano_direction == 'left':
+            self.image = pg.transform.flip(self.image, 1, 0) 
+            
         self.updatePosition()
         
     def updatePosition(self):
@@ -55,11 +63,13 @@ class Fultano(pg.sprite.Sprite):
         self.oldPos = self.pos
         self.dx = 0
         self.dy = 0
+
         key_input = pg.key.get_pressed()
-        if key_input[pg.K_UP] and self.jumped == False:
+        if key_input[pg.K_UP] and self.jumped == False and self.times_jumped < self.max_jumps:
             self.currentState = 'jump'
             self.vel.y = -self.jumpHigh
             self.jumped = True
+            self.times_jumped += 1
         if key_input[pg.K_UP] == False:
             self.jumped = False
         
@@ -67,14 +77,14 @@ class Fultano(pg.sprite.Sprite):
             self.currentState = 'run'
             self.running = True
             self.pos.x = self.pos.x + self.stepLength
+            self.fultano_direction = 'right'
         elif key_input[pg.K_LEFT]:
             self.currentState = 'run'
             self.running = True
-            self.image = pg.transform.flip(self.image, 1, 0)
+            self.fultano_direction = 'left'
             self.pos.x = self.pos.x - self.stepLength
             if self.pos.x <= self.initialPos.x:
                 self.pos.x = self.initialPos.x
-
         elif key_input[pg.K_c]:
             self.attacking = True
             self.currentState = 'attack_1'
@@ -90,9 +100,10 @@ class Fultano(pg.sprite.Sprite):
 
         self.pos.x += self.dx
         if self.pos.y + self.dy <= self.initialPos[1]:
-            self.pos.y += self.dy   
-        if self.rect.bottom > self.initialPos[1]:
-            self.pos.y = self.initialPos[1]
+            self.pos.y += self.dy
+        else:
+            self.times_jumped = 0
+            self.pos.y = self.initialPos[1]   
         self.rect.midbottom = self.pos
 
         
