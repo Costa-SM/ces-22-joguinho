@@ -20,6 +20,8 @@ class Game():
         self.screen = pg.display
         self.window = self.screen.set_mode((WIDTH,HEIGHT))
         self.time = pg.time
+        self.start = False
+        self.paused = False
 
         # Boolean game variables
         self.running = True
