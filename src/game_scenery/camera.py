@@ -12,7 +12,6 @@ class CameraGroup(pg.sprite.Group):
 
         # camera offset
         self.offset = pg.math.Vector2()
-        self.half_width = self.display_surface.get_size()[0] // 2
 
     def center_target_camera(self, target):
         self.offset.x = target.rect.left - 150
