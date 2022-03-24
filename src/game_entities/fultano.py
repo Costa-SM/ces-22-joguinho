@@ -1,4 +1,3 @@
-import os
 from turtle import pos
 import pygame as pg
 from utils import *
@@ -8,15 +7,16 @@ class Fultano(pg.sprite.Sprite):
     '''
     Represents the main character, Fultano.
     '''
-    def __init__(self):
+    def __init__(self, x_pos, y_pos):
         super().__init__()
         self.health = FULTANO_HEALTH
         self.dx = 0
         self.dy = 0
         self.stepLength = 5
         self.jumpHigh = 15
-        self.oldPos = vec(100,600)
-        self.pos = vec(100, 600)
+        self.initialPos = vec(x_pos, y_pos)
+        self.oldPos = vec(x_pos, y_pos)
+        self.pos = self.oldPos
         self.vel = vec(0, 0)
         
         # Sprite Loading
@@ -42,7 +42,7 @@ class Fultano(pg.sprite.Sprite):
         if self.jumped:
             self.currentState = 'jump'
 
-        self.currentSprite = self.currentSprite + 0.1
+        self.currentSprite = self.currentSprite + speed
         if self.currentSprite >= len(self.sprites[self.currentState]):
             self.currentSprite = 0        
         self.image = self.sprites[self.currentState][int(self.currentSprite)]
@@ -72,6 +72,9 @@ class Fultano(pg.sprite.Sprite):
             self.running = True
             self.image = pg.transform.flip(self.image, 1, 0)
             self.pos.x = self.pos.x - self.stepLength
+            if self.pos.x <= self.initialPos.x:
+                self.pos.x = self.initialPos.x
+
         elif key_input[pg.K_c]:
             self.attacking = True
             self.currentState = 'attack_1'
@@ -92,9 +95,4 @@ class Fultano(pg.sprite.Sprite):
             self.pos.y = HEIGHT
         self.rect.midbottom = self.pos
 
-  #  def draw(self, window):
-  #      '''
-  #      Draws Fultano
-  #      '''
-  #      window.blit(self.surf, self.rect)
         
