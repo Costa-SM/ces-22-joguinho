@@ -119,7 +119,7 @@ class Fultano(pg.sprite.Sprite):
 
         self.dy += self.vel.y
         
-        # Checks if it hits the ground
+        # Checks if it hits the ground and collision
 
         if self.pos.y + self.dy <= self.initialPos[1]:
             self.pos.y += self.dy

@@ -11,17 +11,24 @@ class Level:
         self.group = group
         self.setup_level(level_data)
         self.fultano = Fultano(200, 600 - TILE_SIZE, self.tiles)
-        self.monster = Monster(500, 600 - 86 - TILE_SIZE)
+        self.monster1 = Monster(500, 600 - 86 - TILE_SIZE)
+        self.monster2 = Monster(700, 600 - 86 - 5*TILE_SIZE)
+        self.monster3 = Monster(900, 600 - 86 - 8*TILE_SIZE)
+        self.monster4 = Monster(1500, 600 - 86 - TILE_SIZE)
         self.group.add(self.fultano)
-        self.group.add(self.monster)
+        self.group.add(self.monster1)
+        self.group.add(self.monster2)
+        self.group.add(self.monster3)
+        self.group.add(self.monster4)
+        
 
     def setup_level(self, layout):
         for row_index, row in enumerate(layout):
             for col_index, col in enumerate(row):
-                if col == 'X':
+                if col == 'X' or col == 'Y':
                     x = col_index * TILE_SIZE
                     y = row_index * TILE_SIZE
-                    tile = Tile((x, y), TILE_SIZE)
+                    tile = Tile((x, y), TILE_SIZE, col)
                     self.group.add(tile)
                     self.tiles.add(tile)
 
