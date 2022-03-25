@@ -1,7 +1,19 @@
 import pygame as pg
+from os import walk
 from csv import reader
 
 from utils import TILE_SIZE
+
+def importFolder(path):
+    surfaceList = []
+
+    for _, __, imageFiles in walk(path):
+        for image in imageFiles:
+            fullPath = path + '/' + image
+            imageSurf = pg.image.load(fullPath).convert_alpha()
+            surfaceList.append(imageSurf)
+
+    return surfaceList
 
 def importCsvLayout(path):
     '''

@@ -1,4 +1,6 @@
+from importlib import resources
 import pygame as pg
+from  resources import importFolder
 
 class Tile(pg.sprite.Sprite):
     '''
@@ -48,3 +50,20 @@ class StaticTile(Tile):
         '''
         super().__init__(size, x, y)
         self.image = surface
+
+class AnimatedTile(Tile):
+    def __init__(self, size, x, y, path):
+        super().__init__(size, x, y)
+        self.frames = importFolder(path)
+        self.frameIndex = 0
+        self.image = self.frames[self.frameIndex]
+
+    def animate(self):
+        self.frameIndex += 0.15
+        if self.frameIndex >= len(self.frames):
+            self.frameIndex = 0 
+        self.image = self.frames[int(self.frameIndex)]
+
+    def update(self, shift):
+        self.animate()
+        self.rect.x += shift
