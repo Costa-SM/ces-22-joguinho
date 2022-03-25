@@ -21,19 +21,19 @@ class Level:
         self.displaySurface = surface
         
         # Layout moving speed
-        self.worldShift = 0
+        self.worldShift = -5
         
         # Terrain variables
         self.terrainLayout = importCsvLayout(levelData['terrain'])
         self.terrainSprites = self.createTileGroup(self.terrainLayout, 'terrain')
 
-        # Decoration variables
-        self.decorationLayout = importCsvLayout(levelData['bg decoration'])
-        self.decorationSprites = self.createTileGroup(self.decorationLayout, 'bg decoration')
+        # # Decoration variables
+        # self.decorationLayout = importCsvLayout(levelData['bg_decoration'])
+        # self.decorationSprites = self.createTileGroup(self.decorationLayout, 'bg_decoration')
 
-        # Enemies
-        self.enemiesLayout = importCsvLayout(levelData['enemies'])
-        self.enemiesSprites = self.createTileGroup(self.enemiesLayout, 'enemies')
+        # # Enemies
+        # self.enemiesLayout = importCsvLayout(levelData['enemies'])
+        # self.enemiesSprites = self.createTileGroup(self.enemiesLayout, 'enemies')
 
     def createTileGroup(self, layout, type):
         '''
@@ -56,18 +56,18 @@ class Level:
 
                     # Add terrain tiles to the sprite group
                     if type == 'terrain':
-                    #    terrainTileList = importCutGraphics('TODO')
+                        terrainTileList = importCutGraphics('tilesets/terrain_set.png')
                         tileSurface = terrainTileList[int(val)]
                         sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
                         
 
-                    if type == 'bg decoration':
-                        decorationTileList = importCutGraphics('TODO')
-                        tileSurface = decorationTileList[int(val)]
-                        sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
+                    # if type == 'bg_decoration':
+                    #     decorationTileList = importCutGraphics('TODO')
+                    #     tileSurface = decorationTileList[int(val)]
+                    #     sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
 
-                    if type == 'enemies':
-                        sprite = Enemy(TILE_SIZE, x, y)
+                    # if type == 'enemies':
+                    #     sprite = Enemy(TILE_SIZE, x, y)
 
                     spriteGroup.add(sprite)                       
         
@@ -82,12 +82,12 @@ class Level:
         self.terrainSprites.update(self.worldShift)
         self.terrainSprites.draw(self.displaySurface)
         
-        # Run decoration
-        self.decorationSprites.update(self.worldShift)
-        self.decorationSprites.draw(self.displaySurface)        
+        # # Run decoration
+        # self.decorationSprites.update(self.worldShift)
+        # self.decorationSprites.draw(self.displaySurface)        
 
-        # Run enemies
-        self.enemiesSprites.update(self.worldShift)
-        self.enemiesSprites.draw(self.displaySurface)
+        # # Run enemies
+        # self.enemiesSprites.update(self.worldShift)
+        # self.enemiesSprites.draw(self.displaySurface)
 
         
