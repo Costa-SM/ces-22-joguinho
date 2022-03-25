@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
-from level import Level
-from game_data import level_0
+from game_scenery.level import Level
+from game_scenery.game_data import level_0
 from utils import *
 
 pg.init()
@@ -40,15 +40,20 @@ class Game():
         '''
         Function that updates the game.
         
-        '''      
+        '''
+        # Event handler.
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
-           
+        
+        # Background
         self.screen.fill('black')
+        
+        # Level loading
         self.level.run()
 
+        # Screen update
         pg.display.update()
         self.clock.tick(60)
 
@@ -63,7 +68,6 @@ class Game():
         '''
         Main function.
         
-        '''  
+        '''
         self.update()
-
         self.render()
