@@ -1,6 +1,6 @@
 import pygame as pg
-from tile import Tile
-from resources import importCsvLayout
+from tiles import Tile, StaticTile
+from resources import importCsvLayout, importCutGraphics
 from utils import TILE_SIZE
 
 class Level:
@@ -45,8 +45,11 @@ class Level:
                     x = colIndex * TILE_SIZE
                     y = rowIndex * TILE_SIZE
 
+                    # Add terrain tiles to the sprite group
                     if type == 'terrain':
-                        sprite = Tile(TILE_SIZE, x, y)
+                        terrainTileList = importCutGraphics('TODO')
+                        tileSurface = terrainTileList[int(val)]
+                        sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
                         spriteGroup.add(sprite)
         
         return spriteGroup

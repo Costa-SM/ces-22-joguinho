@@ -18,7 +18,6 @@ class Tile(pg.sprite.Sprite):
         '''
         super().__init__()
         self.image = pg.Surface((size, size))
-        self.image.fill('grey')
         self.rect = self.image.get_rect(topleft = (x, y))
 
     def update(self, shift):
@@ -28,3 +27,24 @@ class Tile(pg.sprite.Sprite):
         :type size: int.
         '''
         self.rect.x += shift
+
+class StaticTile(Tile):
+    '''
+    Class that represents a static tile.
+    
+    '''
+    def __init__(self, size, x, y, surface):
+        '''
+        StaticTile class' constructor.
+        :param size: tile size.
+        :type size: int.
+        :param x: tile x coordinate.
+        :type x: int.
+        :param y: tile y coordinate.
+        :type y: int.
+        :param surface: tile surface.
+        :type surface: pygame surface.
+        
+        '''
+        super().__init__(size, x, y)
+        self.image = surface
