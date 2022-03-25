@@ -25,7 +25,7 @@ class Level:
     def setup_level(self, layout):
         for row_index, row in enumerate(layout):
             for col_index, col in enumerate(row):
-                if col == 'X' or col == 'Y':
+                if col in '123456789ABCDEFG':
                     x = col_index * TILE_SIZE
                     y = row_index * TILE_SIZE
                     tile = Tile((x, y), TILE_SIZE, col)
