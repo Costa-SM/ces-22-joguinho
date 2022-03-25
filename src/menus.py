@@ -1,5 +1,4 @@
 import pygame as pg
-from sympy import im
 import os
 from resources import Button
 from utils import FONTS_DIR
@@ -33,12 +32,14 @@ def pause(paused, screen, window, clock):
         window.blit(text_img, (350, 200))
         quit.draw_button()
         if resume.draw_button():
-            paused = False  
+            paused = False
+            pg.mixer.music.unpause()
         for event in pg.event.get():
             if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
             if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or resume.draw_button():    
                 paused = False
+                pg.mixer.music.unpause()
         screen.update()
         clock.Clock().tick(60)
     return paused

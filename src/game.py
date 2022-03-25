@@ -11,6 +11,7 @@ class Game():
     def __init__(self) -> None:
         self.initVariables()
         self.initWindow()
+        self.initMedia()
 
     def initVariables(self):
 
@@ -27,6 +28,12 @@ class Game():
         # Sprite group commanded by camera
         self.camera = CameraGroup()
 
+    def initMedia(self):
+        pg.mixer.init()
+        pg.mixer.music.load('media/Fireside-Tales-MP3.mp3')
+        pg.mixer.music.set_volume(0.1)
+        pg.mixer.music.play(-1)
+
     def initWindow(self):
         self.screen.set_caption("Game")
         self.level = Level(level_map, self.window, self.camera)
@@ -40,6 +47,7 @@ class Game():
                 self.running = False
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
+                    pg.mixer.music.pause()
                     self.paused = True
                     self.paused = pause(self.paused, self.screen, self.window, self.time)
 
