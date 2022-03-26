@@ -56,7 +56,7 @@ class Level:
 
                     # Add terrain tiles to the sprite group
                     if type == 'terrain':
-                        terrainTileList = importCutGraphics('tilesets/terrain_set.png')
+                        terrainTileList = importCutGraphics('assets/world/terrain/terrain_tiles.png')
                         tileSurface = terrainTileList[int(val)]
                         sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
                         

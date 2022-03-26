@@ -1,6 +1,6 @@
-level_0 = {
-    'terrain': 'levels/0/level_0_terrain.csv',
-    'bg decoration': 'levels/0/level_0_bg_decoration.csv',
-    'constraints': 'levels/0/level_0_constraints.csv',
-    'enemies': 'levels/0/level_0_enemies.csv'
+level_1 = {
+    'terrain': 'levels/1/level_1_terrain.csv',
+    'bg decoration': 'levels/1/level_1_bg_decoration.csv',
+    'constraints': 'levels/1/level_1_constraints.csv',
+    'enemies': 'levels/1/level_1_enemies.csv'
 }

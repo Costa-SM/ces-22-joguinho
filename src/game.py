@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from game_scenery.level import Level
-from game_scenery.game_data import level_0
+from game_scenery.game_data import level_1
 from utils import *
 
 pg.init()
@@ -26,7 +26,7 @@ class Game():
         
         '''
         self.clock = pg.time.Clock()
-        self.level = Level(level_0, self.screen)
+        self.level = Level(level_1, self.screen)
 
     def initScreen(self):
         '''
