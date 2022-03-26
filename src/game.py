@@ -54,7 +54,7 @@ class Game():
                 sys.exit()
         
         # Background
-        self.screen.fill('grey')
+        self.screen.fill(pg.Color(36, 37, 77))
         
         # Level loading
         self.level.run()

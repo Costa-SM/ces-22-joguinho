@@ -1,8 +1,9 @@
 import pygame as pg
-from game_scenery.tiles import Decoration, Tile, StaticTile, AnimatedTile, Crate
+from game_scenery.tiles import Decoration, Tile, StaticTile, Crate
 from game_entities.enemy import Enemy
+from game_entities.fultano import Fultano
 from resources import importCsvLayout, importCutGraphics
-from utils import TILE_SIZE
+from utils import SCREEN_WIDTH, TILE_SIZE
 
 class Level:
     '''
@@ -21,7 +22,15 @@ class Level:
         self.displaySurface = surface
         
         # Layout moving speed
-        self.worldShift = -2
+        self.worldShift = 0
+
+        # Player
+        self.playerLayout = importCsvLayout(levelData['player'])
+        self.player = pg.sprite.GroupSingle()
+        self.goal = pg.sprite.GroupSingle()
+        self.playerSetup(self.playerLayout)
+        self.playerOnGround = False
+        self.current_x = None
         
         # Terrain variables
         self.terrainLayout = importCsvLayout(levelData['terrain'])
@@ -86,11 +95,86 @@ class Level:
         
         return spriteGroup
 
+    def playerSetup(self, layout):
+        for rowIndex, row in enumerate(layout):
+            for colIndex, val in enumerate(row):
+                x = colIndex * TILE_SIZE
+                y = rowIndex * TILE_SIZE
+                if val == '0':
+                    sprite = Fultano((x, y))
+                    self.player.add(sprite)
+                if val == '1':
+                    beginSurface = pg.image.load('assets/fultano/hat.png').convert_alpha()
+                    sprite = StaticTile(TILE_SIZE, x, y, beginSurface)
+                    self.goal.add(sprite)
+                    
+
     def enemy_collision_reverse(self):
         for skeleton in self.skeletonSprites.sprites():
             if pg.sprite.spritecollide(skeleton, self.constraintSprites, False):
                 skeleton.reverse()
 
+    def horizontal_movement_collision(self):
+        player = self.player.sprite
+        player.rect.x += player.direction.x * player.speed
+        collidable_sprites = self.terrainSprites.sprites() + self.crateSprites.sprites()
+        for sprite in collidable_sprites:
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.x < 0: 
+                    player.rect.left = sprite.rect.right
+                    player.on_left = True
+                    self.current_x = player.rect.left
+                elif player.direction.x > 0:
+                    player.rect.right = sprite.rect.left
+                    player.on_right = True
+                    self.current_x = player.rect.right
+
+        if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
+            player.on_left = False
+        if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
+            player.on_right = False
+
+    def vertical_movement_collision(self):
+        player = self.player.sprite
+        player.apply_gravity()
+        collidable_sprites = self.terrainSprites.sprites() + self.crateSprites.sprites()
+
+        for sprite in collidable_sprites:
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.y > 0: 
+                    player.rect.bottom = sprite.rect.top
+                    player.direction.y = 0
+                    player.onGround = True
+                elif player.direction.y < 0:
+                    player.rect.top = sprite.rect.bottom
+                    player.direction.y = 0
+                    player.on_ceiling = True
+
+        if player.onGround and player.direction.y < 0 or player.direction.y > 1:
+            player.onGround = False
+        if player.on_ceiling and player.direction.y > 0.1:
+            player.on_ceiling = False
+
+    def scroll_x(self):
+        player = self.player.sprite
+        player_x = player.rect.centerx
+        direction_x = player.direction.x
+
+        if player_x < SCREEN_WIDTH / 2 and direction_x < 0:
+            self.worldShift = 8
+            player.speed = 0
+        elif player_x > SCREEN_WIDTH - (SCREEN_WIDTH / 2) and direction_x > 0:
+            self.worldShift = -8
+            player.speed = 0
+        else:
+            self.worldShift = 0
+            player.speed = 8
+    
+    def get_player_onGround(self):
+        if self.playerOnGround:
+            self.playerOnGround = True
+        else:
+            self.playerOnGround = False
 
     def run(self):
         '''
@@ -115,4 +199,13 @@ class Level:
         self.enemy_collision_reverse()
         self.skeletonSprites.draw(self.displaySurface)
 
+        # Run player
+        self.player.update()
+        self.horizontal_movement_collision()
+        self.get_player_onGround()
+        self.vertical_movement_collision()
+        self.scroll_x()
+        self.player.draw(self.displaySurface)
+        self.goal.update(self.worldShift)
+        self.goal.draw(self.displaySurface)
         
