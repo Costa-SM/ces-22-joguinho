@@ -19,6 +19,7 @@ class Game():
         '''
         self.initScreen()
         self.initVariables()
+        self.initMedia()
 
     def initVariables(self):
         '''
@@ -35,6 +36,11 @@ class Game():
         '''
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+    def initMedia(self):
+        pg.mixer.init()
+        pg.mixer.music.load('media/Fireside-Tales-MP3.mp3')
+        pg.mixer.music.set_volume(0.1)
+        pg.mixer.music.play(-1)
     
     def update(self):
         '''
