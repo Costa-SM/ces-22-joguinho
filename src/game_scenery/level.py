@@ -1,5 +1,5 @@
 import pygame as pg
-from game_scenery.tiles import Tile, StaticTile, AnimatedTile
+from game_scenery.tiles import Decoration, Tile, StaticTile, AnimatedTile, Crate
 from game_entities.enemy import Enemy
 from resources import importCsvLayout, importCutGraphics
 from utils import TILE_SIZE
@@ -27,13 +27,17 @@ class Level:
         self.terrainLayout = importCsvLayout(levelData['terrain'])
         self.terrainSprites = self.createTileGroup(self.terrainLayout, 'terrain')
 
-        # # Decoration variables
-        # self.decorationLayout = importCsvLayout(levelData['bg_decoration'])
-        # self.decorationSprites = self.createTileGroup(self.decorationLayout, 'bg_decoration')
+        # Decoration variables
+        self.decorationLayout = importCsvLayout(levelData['bg_decoration'])
+        self.decorationSprites = self.createTileGroup(self.decorationLayout, 'bg_decoration')
 
-        # # Enemies
-        # self.enemiesLayout = importCsvLayout(levelData['enemies'])
-        # self.enemiesSprites = self.createTileGroup(self.enemiesLayout, 'enemies')
+        # Crates
+        self.crateLayout = importCsvLayout(levelData['crates'])
+        self.crateSprites = self.createTileGroup(self.crateLayout, 'crates')
+
+        # Skeletons
+        self.skeletonLayout = importCsvLayout(levelData['skeleton'])
+        self.skeletonSprites = self.createTileGroup(self.skeletonLayout, 'skeleton')
 
     def createTileGroup(self, layout, type):
         '''
@@ -61,13 +65,15 @@ class Level:
                         sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
                         
 
-                    # if type == 'bg_decoration':
-                    #     decorationTileList = importCutGraphics('TODO')
-                    #     tileSurface = decorationTileList[int(val)]
-                    #     sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
+                    if type == 'bg_decoration':
+                        sprite = Decoration(TILE_SIZE, x, y, val)
 
-                    # if type == 'enemies':
-                    #     sprite = Enemy(TILE_SIZE, x, y)
+                    # Crates
+                    if type == 'crates':
+                        sprite = Crate(TILE_SIZE, x, y)
+
+                    if type == 'skeleton':
+                        sprite = Enemy(TILE_SIZE, x, y)
 
                     spriteGroup.add(sprite)                       
         
@@ -82,12 +88,16 @@ class Level:
         self.terrainSprites.update(self.worldShift)
         self.terrainSprites.draw(self.displaySurface)
         
-        # # Run decoration
-        # self.decorationSprites.update(self.worldShift)
-        # self.decorationSprites.draw(self.displaySurface)        
+        # Run decoration
+        self.decorationSprites.update(self.worldShift)
+        self.decorationSprites.draw(self.displaySurface)        
 
-        # # Run enemies
-        # self.enemiesSprites.update(self.worldShift)
-        # self.enemiesSprites.draw(self.displaySurface)
+        # Run crates
+        self.crateSprites.update(self.worldShift)
+        self.crateSprites.draw(self.displaySurface)
+
+        # Run enemies
+        self.skeletonSprites.update(self.worldShift)
+        self.skeletonSprites.draw(self.displaySurface)
 
         

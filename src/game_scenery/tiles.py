@@ -1,4 +1,3 @@
-from importlib import resources
 import pygame as pg
 from  resources import importFolder
 
@@ -67,3 +66,41 @@ class AnimatedTile(Tile):
     def update(self, shift):
         self.animate()
         self.rect.x += shift
+
+class Crate(StaticTile):
+    def __init__(self, size, x, y):
+        super().__init__(size, x, y, pg.image.load('assets/world/terrain/Crate.png').convert_alpha())
+
+class Decoration(StaticTile):
+    def __init__(self, size, x, y, type):
+        if type == '0':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Bone (1).png').convert_alpha())
+        elif type == '1':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Bone (2).png').convert_alpha())
+        elif type == '2':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Bone (3).png').convert_alpha())
+        elif type == '3':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Bone (4).png').convert_alpha())
+        elif type == '4':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Bush (1).png').convert_alpha())
+        elif type == '5':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Bush (2).png').convert_alpha())
+        elif type == '6':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/DeadBush.png').convert_alpha())
+        elif type == '7':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Sign.png').convert_alpha())
+        elif type == '8':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Skeleton.png').convert_alpha())
+        elif type == '9':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/TombStone (1).png').convert_alpha())
+        elif type == '10':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/TombStone (2).png').convert_alpha())
+        elif type == '11':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/Tree.png').convert_alpha())
+        elif type == '12':
+            super().__init__(size, x, y, pg.image.load('assets/world/decoration/ArrowSign.png').convert_alpha())
+        
+        offset_y = y + size
+        self.rect = self.image.get_rect(bottomleft = (x, offset_y))
+
+        

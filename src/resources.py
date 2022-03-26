@@ -44,11 +44,11 @@ def importCutGraphics(path):
 
     # Create the cutted tiles list
     cutTiles = []
-    for row in range(tileNumX):
-        for col in range(tileNumY):
+    for row in range(tileNumY):
+        for col in range(tileNumX):
             x = col * TILE_SIZE
             y = row * TILE_SIZE
-            newSurf = pg.Surface((TILE_SIZE, TILE_SIZE))
+            newSurf = pg.Surface((TILE_SIZE, TILE_SIZE), flags = pg.SRCALPHA)
             newSurf.blit(surface, (0, 0), pg.Rect(x, y, TILE_SIZE, TILE_SIZE))
             cutTiles.append(newSurf)
 
