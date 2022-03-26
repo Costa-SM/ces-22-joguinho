@@ -21,7 +21,7 @@ class Level:
         self.displaySurface = surface
         
         # Layout moving speed
-        self.worldShift = -5
+        self.worldShift = -2
         
         # Terrain variables
         self.terrainLayout = importCsvLayout(levelData['terrain'])
@@ -38,6 +38,10 @@ class Level:
         # Skeletons
         self.skeletonLayout = importCsvLayout(levelData['skeleton'])
         self.skeletonSprites = self.createTileGroup(self.skeletonLayout, 'skeleton')
+
+        # Constraint
+        self.constraintLayout = importCsvLayout(levelData['constraints'])
+        self.constraintSprites = self.createTileGroup(self.constraintLayout, 'constraints')
 
     def createTileGroup(self, layout, type):
         '''
@@ -75,9 +79,18 @@ class Level:
                     if type == 'skeleton':
                         sprite = Enemy(TILE_SIZE, x, y)
 
+                    if type == 'constraints':
+                        sprite = Tile(TILE_SIZE, x, y)
+
                     spriteGroup.add(sprite)                       
         
         return spriteGroup
+
+    def enemy_collision_reverse(self):
+        for skeleton in self.skeletonSprites.sprites():
+            if pg.sprite.spritecollide(skeleton, self.constraintSprites, False):
+                skeleton.reverse()
+
 
     def run(self):
         '''
@@ -98,6 +111,8 @@ class Level:
 
         # Run enemies
         self.skeletonSprites.update(self.worldShift)
+        self.constraintSprites.update(self.worldShift)
+        self.enemy_collision_reverse()
         self.skeletonSprites.draw(self.displaySurface)
 
         
