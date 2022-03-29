@@ -1,12 +1,6 @@
-from game import *
+from game import Game
 
 game = Game()
 
- # Setting the sprites
-while game.running:
-
-    game.update()
-
-    game.render()
-    
-    # Updating the game
+while True:
+   game.play()

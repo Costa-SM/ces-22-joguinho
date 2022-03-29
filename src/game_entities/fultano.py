@@ -1,144 +1,102 @@
-from turtle import pos
 import pygame as pg
+from resources import importFolder
 from utils import *
-from resources import *
 
 class Fultano(pg.sprite.Sprite):
-    '''
-    Represents the main character, Fultano.
-    '''
-    def __init__(self, x_pos, y_pos, tiles_group):
+    def __init__(self, pos):
         super().__init__()
+        self.import_character_assets()
+        self.frame_index = 0
+        self.animation_speed = 0.15
+        self.image = self.animations['idle'][self.frame_index]
+        self.rect = self.image.get_rect(topleft = pos)
+
+		# player movement
+        self.direction = pg.math.Vector2(0,0)
+        self.speed = 8
+        self.gravity = 0.8
+        self.jump_speed = -16
         self.health = FULTANO_HEALTH
-        self.dx = 0
-        self.dy = 0
-        self.stepLength = 5
-        self.jumpHigh = 15
-        self.running = False
-        self.jumped = False
-        self.attacking = False
-        self.fultano_x_direction = 'right'
-        self.times_jumped = 0
-        self.max_jumps = 3
-        self.initialPos = vec(x_pos, y_pos)
-        self.oldPos = vec(x_pos, y_pos)
-        self.pos = self.oldPos
-        self.vel = vec(0, 0)
-        self.tiles_group = tiles_group
-        
-        # Sprite Loading
-        self.sprites, self.rect = load_sprite('fultano',2)
-        self.currentState = 'idle'
-        self.currentSprite = 0
-        self.image = self.sprites[self.currentState][self.currentSprite]
-        self.rect = self.image.get_rect()
-        self.rect.topleft = [self.pos.x, self.pos.y]
 
+		# player status
+        self.status = 'idle'
+        self.facing_right = True
+        self.onGround = False
+        self.on_ceiling = False
+        self.on_left = False
+        self.on_right = False
 
-    def update(self, speed):
-        '''
-        Updates Fultano
-        '''
-        if not self.running:
-            self.currentState = 'idle'
-        if self.attacking:
-            self.currentState = 'attack_1'
-        if self.jumped:
-            self.currentState = 'jump'
+    def import_character_assets(self):
+        character_path = 'assets/fultano/'
+        self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[]}
 
-        self.currentSprite = self.currentSprite + speed
-        if self.currentSprite >= len(self.sprites[self.currentState]):
-            self.currentSprite = 0
+        for animation in self.animations.keys():
+            full_path = character_path + animation
+            self.animations[animation] = importFolder(full_path)
 
-        self.image = self.sprites[self.currentState][int(self.currentSprite)]  
+    def animate(self):
+        animation = self.animations[self.status]
 
-        if self.fultano_x_direction == 'left':
-            self.image = pg.transform.flip(self.image, 1, 0) 
-            
-        self.updatePosition()
-        
-    def updatePosition(self):
-        '''
-        Moves Fultano
-        '''
-        self.oldPos = self.pos
-        self.dx = 0
-        self.dy = 0
+        # loop over frame index 
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
 
-        key_input = pg.key.get_pressed()
-        if key_input[pg.K_UP] and self.jumped == False and self.times_jumped < self.max_jumps:
-            self.currentState = 'jump'
-            self.vel.y = -self.jumpHigh
-            self.jumped = True
-            self.times_jumped += 1
-        if key_input[pg.K_UP] == False:
-            self.jumped = False
-        
-        if key_input[pg.K_RIGHT]:
-            self.currentState = 'run'
-            self.running = True
-            self.dx = self.stepLength
-            self.fultano_x_direction = 'right'
-        elif key_input[pg.K_LEFT]:
-            self.currentState = 'run'
-            self.running = True
-            self.fultano_x_direction = 'left'
-            self.dx = -self.stepLength
-            if self.pos.x <= self.initialPos.x:
-                self.pos.x = self.initialPos.x
-        elif key_input[pg.K_c]:
-            self.attacking = True
-            self.currentState = 'attack_1'
+        image = animation[int(self.frame_index)]
+        if self.facing_right:
+            self.image = image
         else:
-            self.attacking = False
-            self.running = False 
+            flipped_image = pg.transform.flip(image,True,False)
+            self.image = flipped_image
 
-        # Horizontal movement
+        # set the rect
+        if self.onGround and self.on_right:
+            self.rect = self.image.get_rect(bottomright = self.rect.bottomright)
+        elif self.onGround and self.on_left:
+            self.rect = self.image.get_rect(bottomleft = self.rect.bottomleft)
+        elif self.onGround:
+            self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+        elif self.on_ceiling and self.on_right:
+            self.rect = self.image.get_rect(topright = self.rect.topright)
+        elif self.on_ceiling and self.on_left:
+            self.rect = self.image.get_rect(topleft = self.rect.topleft)
+        elif self.on_ceiling:
+            self.rect = self.image.get_rect(midtop = self.rect.midtop)
 
-        self.pos.x += self.dx
-        self.rect.left = self.pos.x
-        
-        # Check for collisions in x
+    def get_input(self):
+        keys = pg.key.get_pressed()
 
-        for sprite in self.tiles_group:
-            if sprite.rect.colliderect(self.rect):
-                if self.fultano_x_direction == 'left':
-                    self.pos.x += self.stepLength
-                    self.rect.left = sprite.rect.right
-                elif self.fultano_x_direction == 'right':
-                    self.pos.x -= self.stepLength
-                    self.rect.right = sprite.rect.left
-
-        # Vertical movement
-
-        # Gravity
-
-        self.vel.y += 1
-        if self.vel.y > 10:
-            self.vel.y = 10
-
-        self.dy += self.vel.y
-        
-        # Checks if it hits the ground and collision
-
-        if self.pos.y + self.dy <= self.initialPos[1]:
-            self.pos.y += self.dy
+        if keys[pg.K_RIGHT]:
+            self.direction.x = 1
+            self.facing_right = True
+        elif keys[pg.K_LEFT]:
+            self.direction.x = -1
+            self.facing_right = False
         else:
-            self.times_jumped = 0
-            self.pos.y = self.initialPos[1]
-            self.vel.y = 0
-        
-        self.rect.bottom = self.pos.y
+            self.direction.x = 0
 
-        for sprite in self.tiles_group:
-            if sprite.rect.colliderect(self.rect):
-                if self.vel.y < 0:
-                    self.rect.top = sprite.rect.bottom
-                    self.pos.y = self.rect.bottom
-                    self.vel.y = 0
-                elif self.vel.y > 0:
-                    self.rect.bottom = sprite.rect.top
-                    self.times_jumped = 0
-                    self.pos.y = self.rect.bottom
-                    self.vel.y = 0
-        
+        if keys[pg.K_UP] and self.onGround:
+            self.jump()
+
+    def get_status(self):
+        if self.direction.y < 0:
+            self.status = 'jump'
+        elif self.direction.y > 1:
+            self.status = 'fall'
+        else:
+            if self.direction.x != 0:
+                self.status = 'run'
+            else:
+                self.status = 'idle'
+
+    def apply_gravity(self):
+        self.direction.y += self.gravity
+        self.rect.y += self.direction.y
+
+    def jump(self):
+        self.direction.y = self.jump_speed
+
+    def update(self):
+        self.get_input()
+        self.get_status()
+        self.animate()

@@ -1,36 +1,211 @@
 import pygame as pg
-from game_scenery.tiles import Tile
-from utils import TILE_SIZE
+from game_scenery.tiles import Decoration, Tile, StaticTile, Crate
+from game_entities.enemy import Enemy
 from game_entities.fultano import Fultano
-from game_entities.monster import Monster
+from resources import importCsvLayout, importCutGraphics
+from utils import SCREEN_WIDTH, TILE_SIZE
 
 class Level:
-    def __init__(self, level_data, surface, group):
-        self.tiles = pg.sprite.Group()
-        self.display_surface = surface
-        self.group = group
-        self.setup_level(level_data)
-        self.fultano = Fultano(200, 600 - TILE_SIZE, self.tiles)
-        self.monster1 = Monster(500, 600 - 86 - TILE_SIZE)
-        self.monster2 = Monster(700, 600 - 86 - 5*TILE_SIZE)
-        self.monster3 = Monster(900, 600 - 86 - 8*TILE_SIZE)
-        self.monster4 = Monster(1500, 600 - 86 - TILE_SIZE)
-        self.group.add(self.fultano)
-        self.group.add(self.monster1)
-        self.group.add(self.monster2)
-        self.group.add(self.monster3)
-        self.group.add(self.monster4)
+    '''
+    Class that represents the game level.
+    
+    '''
+    def __init__(self, levelData, surface):
+        '''
+        Level class' constructor.
+        :param levelData: data to create the level layout and tiles.
+        :type levelData: .tmx file.
+        :param surface: surface to display the draw the level.
+        :type surface: pygame Surface.
         
+        '''
+        self.displaySurface = surface
+        
+        # Layout moving speed
+        self.worldShift = 0
 
-    def setup_level(self, layout):
-        for row_index, row in enumerate(layout):
-            for col_index, col in enumerate(row):
-                if col in '123456789ABCDEFG':
-                    x = col_index * TILE_SIZE
-                    y = row_index * TILE_SIZE
-                    tile = Tile((x, y), TILE_SIZE, col)
-                    self.group.add(tile)
-                    self.tiles.add(tile)
+        # Player
+        self.playerLayout = importCsvLayout(levelData['player'])
+        self.player = pg.sprite.GroupSingle()
+        self.goal = pg.sprite.GroupSingle()
+        self.playerSetup(self.playerLayout)
+        self.playerOnGround = False
+        self.current_x = None
+        
+        # Terrain variables
+        self.terrainLayout = importCsvLayout(levelData['terrain'])
+        self.terrainSprites = self.createTileGroup(self.terrainLayout, 'terrain')
+
+        # Decoration variables
+        self.decorationLayout = importCsvLayout(levelData['bg_decoration'])
+        self.decorationSprites = self.createTileGroup(self.decorationLayout, 'bg_decoration')
+
+        # Crates
+        self.crateLayout = importCsvLayout(levelData['crates'])
+        self.crateSprites = self.createTileGroup(self.crateLayout, 'crates')
+
+        # Skeletons
+        self.skeletonLayout = importCsvLayout(levelData['skeleton'])
+        self.skeletonSprites = self.createTileGroup(self.skeletonLayout, 'skeleton')
+
+        # Constraint
+        self.constraintLayout = importCsvLayout(levelData['constraints'])
+        self.constraintSprites = self.createTileGroup(self.constraintLayout, 'constraints')
+
+    def createTileGroup(self, layout, type):
+        '''
+        Function that creates a group of tile sprites.
+        :param layout: the tile's layout.
+        :type layout: list.
+        :param type: the tile's type.
+        :type type: string.
+        :rtype: pygame sprite group.
+        
+        '''
+        spriteGroup =  pg.sprite.Group()
+
+        # Read the layout and add to the sprite group
+        for rowIndex, row in enumerate(layout):
+            for colIndex, val in enumerate(row):
+                if val != '-1':
+                    x = colIndex * TILE_SIZE
+                    y = rowIndex * TILE_SIZE
+
+                    # Add terrain tiles to the sprite group
+                    if type == 'terrain':
+                        terrainTileList = importCutGraphics('assets/world/terrain/terrain_tiles.png')
+                        tileSurface = terrainTileList[int(val)]
+                        sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
+                        
+
+                    if type == 'bg_decoration':
+                        sprite = Decoration(TILE_SIZE, x, y, val)
+
+                    # Crates
+                    if type == 'crates':
+                        sprite = Crate(TILE_SIZE, x, y)
+
+                    if type == 'skeleton':
+                        sprite = Enemy(TILE_SIZE, x, y)
+
+                    if type == 'constraints':
+                        sprite = Tile(TILE_SIZE, x, y)
+
+                    spriteGroup.add(sprite)                       
+        
+        return spriteGroup
+
+    def playerSetup(self, layout):
+        for rowIndex, row in enumerate(layout):
+            for colIndex, val in enumerate(row):
+                x = colIndex * TILE_SIZE
+                y = rowIndex * TILE_SIZE
+                if val == '0':
+                    sprite = Fultano((x, y))
+                    self.player.add(sprite)
+                if val == '1':
+                    beginSurface = pg.image.load('assets/fultano/hat.png').convert_alpha()
+                    sprite = StaticTile(TILE_SIZE, x, y, beginSurface)
+                    self.goal.add(sprite)
+                    
+
+    def enemy_collision_reverse(self):
+        for skeleton in self.skeletonSprites.sprites():
+            if pg.sprite.spritecollide(skeleton, self.constraintSprites, False):
+                skeleton.reverse()
+
+    def horizontal_movement_collision(self):
+        player = self.player.sprite
+        player.rect.x += player.direction.x * player.speed
+        collidable_sprites = self.terrainSprites.sprites() + self.crateSprites.sprites()
+        for sprite in collidable_sprites:
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.x < 0: 
+                    player.rect.left = sprite.rect.right
+                    player.on_left = True
+                    self.current_x = player.rect.left
+                elif player.direction.x > 0:
+                    player.rect.right = sprite.rect.left
+                    player.on_right = True
+                    self.current_x = player.rect.right
+
+        if player.on_left and (player.rect.left < self.current_x or player.direction.x >= 0):
+            player.on_left = False
+        if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
+            player.on_right = False
+
+    def vertical_movement_collision(self):
+        player = self.player.sprite
+        player.apply_gravity()
+        collidable_sprites = self.terrainSprites.sprites() + self.crateSprites.sprites()
+
+        for sprite in collidable_sprites:
+            if sprite.rect.colliderect(player.rect):
+                if player.direction.y > 0: 
+                    player.rect.bottom = sprite.rect.top
+                    player.direction.y = 0
+                    player.onGround = True
+                elif player.direction.y < 0:
+                    player.rect.top = sprite.rect.bottom
+                    player.direction.y = 0
+                    player.on_ceiling = True
+
+        if player.onGround and player.direction.y < 0 or player.direction.y > 1:
+            player.onGround = False
+        if player.on_ceiling and player.direction.y > 0.1:
+            player.on_ceiling = False
+
+    def scroll_x(self):
+        player = self.player.sprite
+        player_x = player.rect.centerx
+        direction_x = player.direction.x
+
+        if player_x < SCREEN_WIDTH / 2 and direction_x < 0:
+            self.worldShift = 8
+            player.speed = 0
+        elif player_x > SCREEN_WIDTH - (SCREEN_WIDTH / 2) and direction_x > 0:
+            self.worldShift = -8
+            player.speed = 0
+        else:
+            self.worldShift = 0
+            player.speed = 8
+    
+    def get_player_onGround(self):
+        if self.playerOnGround:
+            self.playerOnGround = True
+        else:
+            self.playerOnGround = False
 
     def run(self):
-        self.group.custom_draw(self.fultano)
+        '''
+        Function that runs the level.
+
+        '''
+        # Run terrain
+        self.terrainSprites.update(self.worldShift)
+        self.terrainSprites.draw(self.displaySurface)
+        
+        # Run decoration
+        self.decorationSprites.update(self.worldShift)
+        self.decorationSprites.draw(self.displaySurface)        
+
+        # Run crates
+        self.crateSprites.update(self.worldShift)
+        self.crateSprites.draw(self.displaySurface)
+
+        # Run enemies
+        self.skeletonSprites.update(self.worldShift)
+        self.constraintSprites.update(self.worldShift)
+        self.enemy_collision_reverse()
+        self.skeletonSprites.draw(self.displaySurface)
+
+        # Run player
+        self.player.update()
+        self.horizontal_movement_collision()
+        self.get_player_onGround()
+        self.vertical_movement_collision()
+        self.scroll_x()
+        self.player.draw(self.displaySurface)
+        self.goal.update(self.worldShift)
+        self.goal.draw(self.displaySurface)
+        
