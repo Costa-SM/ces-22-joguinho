@@ -1,5 +1,6 @@
 import pygame as pg
 import sys
+from menus import main, pause
 from game_scenery.level import Level
 from game_scenery.game_data import level_1
 from utils import *
@@ -27,6 +28,7 @@ class Game():
         
         '''
         self.clock = pg.time.Clock()
+        self.start = False
         self.level = Level(level_1, self.screen)
 
     def initScreen(self):
@@ -47,11 +49,18 @@ class Game():
         Function that updates the game.
         
         '''
+        if not self.start:
+            self.start = main(self.start, self.screen, pg.time)
         # Event handler.
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 sys.exit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pg.mixer.music.pause()
+                self.paused = True
+                self.paused = pause(self.paused, self.screen, pg.time)
+
         
         # Background
         self.screen.fill(pg.Color(36, 37, 77))

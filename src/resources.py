@@ -53,3 +53,50 @@ def importCutGraphics(path):
             cutTiles.append(newSurf)
 
     return cutTiles
+
+class Button(pg.sprite.Sprite):
+    '''
+    Class that represents a button.
+    '''
+    def __init__(self, x, y, text, window):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.text = text
+        self.window = window
+
+        self.fontDir = 'fonts/manaspc.ttf'
+        self.font = pg.font.Font(self.fontDir, 20)
+        self.text_col = pg.Color('black')
+        
+        self.mousePos = pg.mouse.get_pos()
+        self.sprites = importFolder('assets/buttons')
+        self.image = self.sprites[0]
+        self.rect = self.image.get_rect(center = (x,y))
+
+        self.clicked = False
+        self.action = False
+
+    def draw_button(self):
+
+        self.action = False
+        self.rect.midbottom = (self.x, self.y)
+        self.mousePos = pg.mouse.get_pos()
+        if self.rect.collidepoint(self.mousePos):
+            if pg.mouse.get_pressed()[0] == 1:
+                self.clicked = True
+                self.image = self.sprites[1]
+            elif pg.mouse.get_pressed()[0] == 0 and self.clicked == True:
+                if self.rect.collidepoint(self.mousePos):
+                    self.clicked = False
+                    self.action = True
+            #else:
+            # Hover button behavior  
+        buttonSprite = pg.sprite.Group()
+        buttonSprite.add(self)
+        buttonSprite.draw(self.window)
+        text_img = self.font.render(self.text, True, self.text_col)
+        text_len = text_img.get_width()
+        self.window.blit(text_img, (self.x - int(self.rect.width/1.75) + int(text_len/2), self.y - self.rect.height/1.5))
+
+        return self.action
