@@ -9,6 +9,7 @@ class Fultano(pg.sprite.Sprite):
         self.frame_index = 0
         self.animation_speed = 0.15
         self.image = self.animations['idle'][self.frame_index]
+        self.image = pg.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect(topleft = pos)
 
 		# player movement
@@ -43,6 +44,7 @@ class Fultano(pg.sprite.Sprite):
             self.frame_index = 0
 
         image = animation[int(self.frame_index)]
+        image = pg.transform.scale(image, (100, 74))
         if self.facing_right:
             self.image = image
         else:

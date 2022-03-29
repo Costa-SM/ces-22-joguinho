@@ -56,12 +56,14 @@ class AnimatedTile(Tile):
         self.frames = importFolder(path)
         self.frameIndex = 0
         self.image = self.frames[self.frameIndex]
+        self.image = pg.transform.scale(self.image, (100, 96))
 
     def animate(self):
         self.frameIndex += 0.15
         if self.frameIndex >= len(self.frames):
             self.frameIndex = 0 
         self.image = self.frames[int(self.frameIndex)]
+        self.image = pg.transform.scale(self.image, (100, 96))
 
     def update(self, shift):
         self.animate()
