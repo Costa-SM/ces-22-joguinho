@@ -16,6 +16,8 @@ def main(start, screen, clock):
         for event in pg.event.get():
             if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_RETURN:
+                start = True
         pg.display.update()
         clock.Clock().tick(60)
     

@@ -7,7 +7,7 @@ class Fultano(pg.sprite.Sprite):
         super().__init__()
         self.import_character_assets()
         self.frame_index = 0
-        self.animation_speed = 0.15
+        self.animation_speed = 0.075
         self.image = self.animations['idle'][self.frame_index]
         self.image = pg.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect(topleft = pos)
@@ -26,6 +26,7 @@ class Fultano(pg.sprite.Sprite):
         self.on_ceiling = False
         self.on_left = False
         self.on_right = False
+        self.attacking = False
 
     def import_character_assets(self):
         character_path = 'assets/fultano/'
@@ -68,10 +69,10 @@ class Fultano(pg.sprite.Sprite):
     def get_input(self):
         keys = pg.key.get_pressed()
 
-        if keys[pg.K_RIGHT]:
+        if keys[pg.K_RIGHT] and not self.attacking:
             self.direction.x = 1
             self.facing_right = True
-        elif keys[pg.K_LEFT]:
+        elif keys[pg.K_LEFT] and not self.attacking:
             self.direction.x = -1
             self.facing_right = False
         else:
@@ -80,16 +81,24 @@ class Fultano(pg.sprite.Sprite):
         if keys[pg.K_UP] and self.onGround:
             self.jump()
 
-    def get_status(self):
-        if self.direction.y < 0:
-            self.status = 'jump'
-        elif self.direction.y > 1:
-            self.status = 'fall'
+        if keys[pg.K_c] and self.onGround and self.direction.x == 0:
+            self.attacking = True
         else:
-            if self.direction.x != 0:
-                self.status = 'run'
+            self.attacking = False
+
+    def get_status(self):
+        if self.attacking:
+            self.status = 'attack_1'
+        else:
+            if self.direction.y < 0:
+                self.status = 'jump'
+            elif self.direction.y > 1:
+                self.status = 'fall'
             else:
-                self.status = 'idle'
+                if self.direction.x != 0:
+                    self.status = 'run'
+                else:
+                    self.status = 'idle'
 
     def apply_gravity(self):
         self.direction.y += self.gravity
