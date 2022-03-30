@@ -190,6 +190,8 @@ class Level:
         player = self.player.sprite
         if player.rect.bottom >= SCREEN_HEIGHT + 200:
             self.resetLevel = True
+        elif player.health == 0:
+            self.resetLevel = True
         
     def run(self):
         '''
