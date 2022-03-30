@@ -198,7 +198,17 @@ class Level:
         self.skeletonSprites.update(self.worldShift)
         self.constraintSprites.update(self.worldShift)
         self.enemy_collision_reverse()
+
+        # Hack to fix draw position
+        for skeleton in self.skeletonSprites:
+            skeleton.rect.x -= 25
+            skeleton.rect.y -= 15
+
         self.skeletonSprites.draw(self.displaySurface)
+
+        for skeleton in self.skeletonSprites:
+            skeleton.rect.x += 25
+            skeleton.rect.y += 15
 
         # Run player
         self.player.update()
