@@ -1,3 +1,4 @@
+from distutils.log import debug
 import pygame as pg
 from game_scenery.tiles import Decoration, Tile, StaticTile, Crate
 from game_entities.enemy import Enemy
@@ -197,7 +198,17 @@ class Level:
         self.skeletonSprites.update(self.worldShift)
         self.constraintSprites.update(self.worldShift)
         self.enemy_collision_reverse()
+
+        # Hack to fix draw position
+        for skeleton in self.skeletonSprites:
+            skeleton.rect.x -= 25
+            skeleton.rect.y -= 15
+
         self.skeletonSprites.draw(self.displaySurface)
+
+        for skeleton in self.skeletonSprites:
+            skeleton.rect.x += 25
+            skeleton.rect.y += 15
 
         # Run player
         self.player.update()
@@ -205,7 +216,23 @@ class Level:
         self.get_player_onGround()
         self.vertical_movement_collision()
         self.scroll_x()
+
+        self.player.sprite.rect.x -= 25
         self.player.draw(self.displaySurface)
+        self.player.sprite.rect.x += 25
+        
         self.goal.update(self.worldShift)
         self.goal.draw(self.displaySurface)
+
+        #Debug function
+        self.debug()
         
+    def debug(self):
+        # Helpful debug drawings
+
+        # Draw the player's rectangle
+        pg.draw.rect(self.displaySurface, pg.Color('red'), self.player.sprite.rect, width=4)
+
+        # Draw the skeleton's rectangles
+        for skeleton in self.skeletonSprites:
+            pg.draw.rect(self.displaySurface, pg.Color('red'), skeleton.rect, width=4)
