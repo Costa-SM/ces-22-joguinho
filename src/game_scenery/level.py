@@ -135,6 +135,14 @@ class Level:
         if player.on_right and (player.rect.right > self.current_x or player.direction.x <= 0):
             player.on_right = False
 
+    def player_enemy_collision(self):
+        player = self.player.sprite
+        collidable_sprites = self.skeletonSprites.sprites()
+        for sprite in collidable_sprites:
+            if sprite.rect.colliderect(player.rect) and player.blinking == False:
+                player.health -= 1
+                player.blinking = True
+
     def vertical_movement_collision(self):
         player = self.player.sprite
         player.apply_gravity()
@@ -213,6 +221,7 @@ class Level:
         # Run player
         self.player.update()
         self.horizontal_movement_collision()
+        self.player_enemy_collision()
         self.get_player_onGround()
         self.vertical_movement_collision()
         self.scroll_x()
@@ -228,7 +237,7 @@ class Level:
         self.player.sprite.healthSprites.empty()
 
         #Debug function
-        self.debug()
+        #self.debug()
         
     def debug(self):
         # Helpful debug drawings
