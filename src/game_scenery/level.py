@@ -1,10 +1,9 @@
-from distutils.log import debug
 import pygame as pg
 from game_scenery.tiles import Decoration, Tile, StaticTile, Crate
 from game_entities.enemy import Enemy
 from game_entities.fultano import Fultano
 from resources import importCsvLayout, importCutGraphics
-from utils import SCREEN_WIDTH, TILE_SIZE
+from utils import SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE
 
 class Level:
     '''
@@ -21,6 +20,8 @@ class Level:
         
         '''
         self.displaySurface = surface
+
+        self.resetLevel = False
         
         # Layout moving speed
         self.worldShift = 0
@@ -184,7 +185,12 @@ class Level:
             self.playerOnGround = True
         else:
             self.playerOnGround = False
-
+    
+    def resetAllLevel(self):
+        player = self.player.sprite
+        if player.rect.bottom >= SCREEN_HEIGHT + 200:
+            self.resetLevel = True
+        
     def run(self):
         '''
         Function that runs the level.
@@ -225,6 +231,7 @@ class Level:
         self.get_player_onGround()
         self.vertical_movement_collision()
         self.scroll_x()
+        self.resetAllLevel()
 
         self.player.sprite.rect.x -= 25
         self.player.draw(self.displaySurface)

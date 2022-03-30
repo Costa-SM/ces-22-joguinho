@@ -61,13 +61,17 @@ class Game():
                 self.paused = True
                 self.paused = pause(self.paused, self.screen, pg.time)
         
-
-        
         # Background
         self.screen.fill(pg.Color(36, 37, 77))
         
         # Level loading
         self.level.run()
+
+        # Check if level will reset
+
+        if self.level.resetLevel == True:
+            self.initVariables()
+            self.initMedia()
 
         # Screen update
         pg.display.update()
