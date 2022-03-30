@@ -29,6 +29,12 @@ class Fultano(pg.sprite.Sprite):
         self.on_left = False
         self.on_right = False
         self.attacking = False
+
+        # Player hurted
+        self.timeHurted = 10
+        self.blinking = False
+        self.countHurted = 0
+
     def import_character_assets(self):
         character_path = 'assets/fultano/'
         self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[]}
@@ -47,6 +53,16 @@ class Fultano(pg.sprite.Sprite):
 
         image = animation[int(self.frame_index)]
         image = pg.transform.scale(image, (100, 74))
+
+        if self.blinking == True:
+            self.countHurted += 0.1
+            if int(self.countHurted) % 2 == 0:
+                image = pg.Surface((100, 74), pg.SRCALPHA, 16)
+
+        if int(self.countHurted) >= self.timeHurted:
+            self.countHurted = 0
+            self.blinking = False
+
         if self.facing_right:
             self.image = image
         else:
@@ -69,7 +85,7 @@ class Fultano(pg.sprite.Sprite):
 
         self.rect = pg.Rect(self.rect.x, self.rect.y, 50, self.image.get_rect().height)
 
-        print(self.rect.x, self.rect.y)
+        #print(self.rect.x, self.rect.y)
 
     def get_input(self):
         keys = pg.key.get_pressed()
@@ -107,7 +123,7 @@ class Fultano(pg.sprite.Sprite):
 
     def get_health(self):
         
-        for heart in range(self.health):
+        for heart in range(int(self.health)):
             heartSurface = pg.image.load('assets/interface/heart.png').convert_alpha()
             sprite = StaticTile(TILE_SIZE, 25 + 30*heart, 20, heartSurface)
             self.healthSprites.add(sprite)
