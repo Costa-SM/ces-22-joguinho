@@ -60,6 +60,7 @@ class Game():
                 pg.mixer.music.pause()
                 self.paused = True
                 self.paused = pause(self.paused, self.screen, pg.time)
+        
 
         
         # Background

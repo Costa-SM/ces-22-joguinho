@@ -1,4 +1,5 @@
 import pygame as pg
+from game_scenery.tiles import StaticTile
 from resources import importFolder
 from utils import *
 
@@ -11,13 +12,14 @@ class Fultano(pg.sprite.Sprite):
         self.image = self.animations['idle'][self.frame_index]
         self.image = pg.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect(topleft = pos)
+        self.health = FULTANO_HEALTH
+        self.healthSprites = pg.sprite.Group()
 
 		# player movement
         self.direction = pg.math.Vector2(0,0)
         self.speed = 8
         self.gravity = 0.8
         self.jump_speed = -16
-        self.health = FULTANO_HEALTH
 
 		# player status
         self.status = 'idle'
@@ -27,7 +29,6 @@ class Fultano(pg.sprite.Sprite):
         self.on_left = False
         self.on_right = False
         self.attacking = False
-
     def import_character_assets(self):
         character_path = 'assets/fultano/'
         self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[]}
@@ -100,6 +101,13 @@ class Fultano(pg.sprite.Sprite):
                 else:
                     self.status = 'idle'
 
+    def get_health(self):
+        
+        for heart in range(self.health):
+            heartSurface = pg.image.load('assets/interface/heart.png').convert_alpha()
+            sprite = StaticTile(TILE_SIZE, 25 + 30*heart, 20, heartSurface)
+            self.healthSprites.add(sprite)
+
     def apply_gravity(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
@@ -110,4 +118,5 @@ class Fultano(pg.sprite.Sprite):
     def update(self):
         self.get_input()
         self.get_status()
+        self.get_health()
         self.animate()

@@ -208,4 +208,8 @@ class Level:
         self.player.draw(self.displaySurface)
         self.goal.update(self.worldShift)
         self.goal.draw(self.displaySurface)
+        self.player.sprite.healthSprites.update(0)
+        self.player.sprite.healthSprites.draw(self.displaySurface)
+        self.player.sprite.healthSprites.empty()
+
         
