@@ -47,7 +47,7 @@ def pause(paused, screen, clock):
     return paused
 
 def death(start, screen, clock):
-    restart = Button(400, 400, 'Main Menu', screen)
+    restart = Button(400, 400, ' Menu', screen)
     quit = Button(600, 400, ' Quit', screen)
     fontDir = 'fonts/manaspc.ttf'
     while start:

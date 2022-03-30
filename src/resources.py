@@ -80,7 +80,7 @@ class Button(pg.sprite.Sprite):
     def draw_button(self):
 
         self.action = False
-        self.rect.midbottom = (self.x, self.y)
+        self.rect.center = (self.x, self.y)
         self.mousePos = pg.mouse.get_pos()
         if self.rect.collidepoint(self.mousePos):
             if pg.mouse.get_pressed()[0] == 1:
@@ -97,6 +97,6 @@ class Button(pg.sprite.Sprite):
         buttonSprite.draw(self.window)
         text_img = self.font.render(self.text, True, self.text_col)
         text_len = text_img.get_width()
-        self.window.blit(text_img, (self.x - int(self.rect.width/1.75) + int(text_len/2), self.y - self.rect.height/1.5))
+        self.window.blit(text_img, (self.x - self.rect.width/4 - 5, self.y - self.rect.height/4))
 
         return self.action
