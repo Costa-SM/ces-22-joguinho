@@ -54,18 +54,22 @@ class Fultano(pg.sprite.Sprite):
             self.image = flipped_image
 
         # set the rect
-        if self.onGround and self.on_right:
-            self.rect = self.image.get_rect(bottomright = self.rect.bottomright)
-        elif self.onGround and self.on_left:
-            self.rect = self.image.get_rect(bottomleft = self.rect.bottomleft)
-        elif self.onGround:
-            self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
-        elif self.on_ceiling and self.on_right:
-            self.rect = self.image.get_rect(topright = self.rect.topright)
-        elif self.on_ceiling and self.on_left:
-            self.rect = self.image.get_rect(topleft = self.rect.topleft)
-        elif self.on_ceiling:
-            self.rect = self.image.get_rect(midtop = self.rect.midtop)
+        #if self.onGround and self.on_right:
+        #    self.rect = self.image.get_rect(bottomright = self.rect.bottomright)
+        #elif self.onGround and self.on_left:
+        #    self.rect = self.image.get_rect(bottomleft = self.rect.bottomleft)
+        #elif self.onGround:
+        #    self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
+        #elif self.on_ceiling and self.on_right:
+        #    self.rect = self.image.get_rect(topright = self.rect.topright)
+        #elif self.on_ceiling and self.on_left:
+        #    self.rect = self.image.get_rect(topleft = self.rect.topleft)
+        #elif self.on_ceiling:
+        #    self.rect = self.image.get_rect(midtop = self.rect.midtop)
+
+        self.rect = pg.Rect(self.rect.x, self.rect.y, 50, self.image.get_rect().height)
+
+        print(self.rect.x, self.rect.y)
 
     def get_input(self):
         keys = pg.key.get_pressed()

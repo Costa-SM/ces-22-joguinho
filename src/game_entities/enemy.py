@@ -8,6 +8,9 @@ class Enemy(AnimatedTile):
         # TODO: refactor this and implement image resize
         self.rect.y += size - self.image.get_size()[1] + self.image.get_size()[1] / 8
         self.speed = randint(1, 2)
+
+        self.rect.height = self.image.get_rect().height - 20
+        self.rect.y += 15
     
     def move(self):
         self.rect.x += self.speed
