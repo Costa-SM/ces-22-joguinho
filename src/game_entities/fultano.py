@@ -14,6 +14,7 @@ class Fultano(pg.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.health = FULTANO_HEALTH
         self.healthSprites = pg.sprite.Group()
+        self.last_status = None
 
 		# player movement
         self.direction = pg.math.Vector2(0,0)
@@ -30,7 +31,7 @@ class Fultano(pg.sprite.Sprite):
         self.on_right = False
         self.attacking = False
 
-        # Player hurted
+        # Player hurt
         self.timeHurted = 10
         self.blinking = False
         self.countHurted = 0
@@ -44,6 +45,9 @@ class Fultano(pg.sprite.Sprite):
             self.animations[animation] = importFolder(full_path)
 
     def animate(self):
+        if self.last_status != self.status:
+            self.frame_index = 0
+        
         animation = self.animations[self.status]
 
         # loop over frame index 
@@ -86,6 +90,7 @@ class Fultano(pg.sprite.Sprite):
         self.rect = pg.Rect(self.rect.x, self.rect.y, 50, self.image.get_rect().height)
 
         #print(self.rect.x, self.rect.y)
+        self.last_status = self.status
 
     def get_input(self):
         keys = pg.key.get_pressed()
