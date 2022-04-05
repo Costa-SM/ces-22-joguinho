@@ -8,6 +8,8 @@ def importFolder(path):
     surfaceList = []
 
     for _, __, imageFiles in walk(path):
+        imageFiles.sort()
+
         for image in imageFiles:
             fullPath = path + '/' + image
             imageSurf = pg.image.load(fullPath).convert_alpha()
