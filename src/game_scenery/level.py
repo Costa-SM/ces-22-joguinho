@@ -198,6 +198,10 @@ class Level:
         elif player.health == 0:
             self.resetLevel = True
         
+        # When the goal is reached, go back to the menu
+        elif self.goal.sprite.rect.colliderect(self.player.sprite.rect):
+            self.resetLevel = True
+        
     def run(self):
         '''
         Function that runs the level.
@@ -251,13 +255,16 @@ class Level:
         self.player.sprite.healthSprites.empty()
 
         #Debug function
-        #self.debug()
+        self.debug()
         
     def debug(self):
         # Helpful debug drawings
 
         # Draw the player's rectangle
         pg.draw.rect(self.displaySurface, pg.Color('red'), self.player.sprite.rect, width=4)
+
+        # Draw the goal's rectangle
+        pg.draw.rect(self.displaySurface, pg.Color('red'), self.goal.sprite.rect, width=4)
 
         # Draw the skeleton's rectangles
         for skeleton in self.skeletonSprites:
