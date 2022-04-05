@@ -57,10 +57,7 @@ class Level:
     def createTileGroup(self, layout, type):
         '''
         Function that creates a group of tile sprites.
-        :param layout: the tile's layout.
-        :type layout: list.
-        :param type: the tile's type.
-        :type type: string.
+        :param layout: the tile's layout.sprites = self.skeletonSprites.sprites()
         :rtype: pygame sprite group.
         
         '''
@@ -139,10 +136,18 @@ class Level:
     def player_enemy_collision(self):
         player = self.player.sprite
         collidable_sprites = self.skeletonSprites.sprites()
+
         for sprite in collidable_sprites:
-            if sprite.rect.colliderect(player.rect) and player.blinking == False:
-                player.health -= 1
-                player.blinking = True
+            if sprite.rect.colliderect(player.rect):
+                if (player.rect.x - sprite.rect.x) > 0:
+                    self.player.sprite.collision_side = -1
+                else:
+                    self.player.sprite.collision_side = 1
+
+                if player.blinking == False:
+                    player.health -= 1
+                    print('Damage taken')
+                    player.blinking = True
 
     def vertical_movement_collision(self):
         player = self.player.sprite

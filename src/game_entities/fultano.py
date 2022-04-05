@@ -15,6 +15,7 @@ class Fultano(pg.sprite.Sprite):
         self.health = FULTANO_HEALTH
         self.healthSprites = pg.sprite.Group()
         self.last_status = None
+        self.collision_side = None
 
 		# player movement
         self.direction = pg.math.Vector2(0,0)
@@ -95,6 +96,18 @@ class Fultano(pg.sprite.Sprite):
     def get_input(self):
         keys = pg.key.get_pressed()
 
+        # If Fultano has been damaged, ignore input and get pushed back
+        if self.collision_side != None:
+            if self.countHurted < 0.5:
+                self.direction.x = -self.collision_side
+
+                if not self.onGround:
+                    self.jump()
+                
+                return
+            
+            self.collision_side = None
+
         if keys[pg.K_RIGHT] and not self.attacking:
             self.direction.x = 1
             self.facing_right = True
@@ -138,7 +151,8 @@ class Fultano(pg.sprite.Sprite):
         self.rect.y += self.direction.y
 
     def jump(self):
-        self.direction.y = self.jump_speed
+        if self.status != 'jump':
+            self.direction.y = self.jump_speed
 
     def update(self):
         self.get_input()
