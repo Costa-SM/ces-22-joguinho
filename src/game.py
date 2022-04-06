@@ -40,7 +40,7 @@ class Game():
 
     def initMedia(self):
         pg.mixer.init()
-        pg.mixer.music.load('media/Fireside-Tales-MP3.mp3')
+        pg.mixer.music.load(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
         pg.mixer.music.set_volume(0.1)
         pg.mixer.music.play(-1)
     
@@ -61,8 +61,8 @@ class Game():
                 self.paused = True
                 self.paused = pause(self.paused, self.screen, pg.time)
         
-        # Background
-        self.screen.fill(pg.Color(36, 37, 77))
+        # Background     
+        self.screen.blit(pg.image.load(ASSETS_DIR + '/background/background_1.png'), (0,0))
         
         # Level loading
         self.level.run()
