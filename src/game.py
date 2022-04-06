@@ -1,6 +1,7 @@
+from textwrap import dedent
 import pygame as pg
 import sys
-from menus import main, pause
+from menus import main, pause, death
 from game_scenery.level import Level
 from game_scenery.game_data import level_1
 from utils import *
@@ -29,6 +30,7 @@ class Game():
         '''
         self.clock = pg.time.Clock()
         self.start = False
+        self.paused = False
         self.level = Level(level_1, self.screen)
 
     def initScreen(self):
@@ -70,6 +72,8 @@ class Game():
         # Check if level will reset
 
         if self.level.resetLevel == True:
+            pg.mixer.music.pause()
+            self.start = death(self.start, self.screen, pg.time)
             self.initVariables()
             self.initMedia()
 
