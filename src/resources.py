@@ -58,19 +58,23 @@ class Button(pg.sprite.Sprite):
     '''
     Class that represents a button.
     '''
-    def __init__(self, x, y, text, window):
+    def __init__(self, x, y, text, window, size):
         super().__init__()
         self.x = x
         self.y = y
         self.text = text
         self.window = window
+        self.size = size
 
         self.fontDir = 'fonts/manaspc.ttf'
-        self.font = pg.font.Font(self.fontDir, 20)
+        self.font = pg.font.Font(self.fontDir, 30)
         self.text_col = pg.Color('black')
         
         self.mousePos = pg.mouse.get_pos()
-        self.sprites = importFolder('assets/buttons')
+        if self.size == 'normal':   
+            self.sprites = importFolder('assets/buttons/normal_buttons')
+        elif self.size == 'large':
+            self.sprites = importFolder('assets/buttons/large_buttons')
         self.image = self.sprites[0]
         self.rect = self.image.get_rect(center = (x,y))
 
@@ -97,6 +101,6 @@ class Button(pg.sprite.Sprite):
         buttonSprite.draw(self.window)
         text_img = self.font.render(self.text, True, self.text_col)
         text_len = text_img.get_width()
-        self.window.blit(text_img, (self.x - self.rect.width/4 - 5, self.y - self.rect.height/4))
+        self.window.blit(text_img, (self.x - self.rect.width/4 - text_len/6, self.y - self.rect.height/4))
 
         return self.action
