@@ -256,7 +256,7 @@ class Level:
         self.player.sprite.healthSprites.empty()
 
         #Debug function
-        self.debug()
+        #self.debug()
         
     def debug(self):
         # Helpful debug drawings

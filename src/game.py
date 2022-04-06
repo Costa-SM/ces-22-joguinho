@@ -64,7 +64,7 @@ class Game():
                 self.paused = pause(self.paused, self.screen, pg.time)
         
         # Background     
-        self.screen.blit(pg.image.load(ASSETS_DIR + '/background/background_1.png'), (0,0))
+        self.screen.blit(pg.image.load(ASSETS_DIR + '/background/background_3.jpg'), (0,0))
         
         # Level loading
         self.level.run()
