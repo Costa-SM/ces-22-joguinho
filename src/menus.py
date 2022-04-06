@@ -1,11 +1,12 @@
 import pygame as pg
 import os
 from resources import Button
+from utils import BASE_PATH
 
 def main(start, screen, clock):
     play = Button(400, 400, ' Play', screen)
     quit = Button(600, 400, ' Quit', screen)
-    fontDir = 'fonts/manaspc.ttf'
+    fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
     screen.fill((36, 37, 77))
     text_img = pg.font.Font(fontDir, 50).render('Fultano\'s Tale', True, 'black')
     screen.blit(text_img, (275, 100))

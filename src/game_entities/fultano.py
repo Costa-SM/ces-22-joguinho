@@ -38,7 +38,7 @@ class Fultano(pg.sprite.Sprite):
         self.countHurted = 0
 
     def import_character_assets(self):
-        character_path = 'assets/fultano/'
+        character_path = ASSETS_DIR + '/fultano/'
         self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[]}
 
         for animation in self.animations.keys():
@@ -142,7 +142,7 @@ class Fultano(pg.sprite.Sprite):
     def get_health(self):
         
         for heart in range(int(self.health)):
-            heartSurface = pg.image.load('assets/interface/heart.png').convert_alpha()
+            heartSurface = pg.image.load(os.path.join(BASE_PATH, 'assets/interface/heart.png')).convert_alpha()
             sprite = StaticTile(TILE_SIZE, 25 + 30*heart, 20, heartSurface)
             self.healthSprites.add(sprite)
 

@@ -1,10 +1,12 @@
+import os
 import pygame as pg
 from game_scenery.tiles import AnimatedTile
 from random import randint
+from utils import BASE_PATH
 
 class Enemy(AnimatedTile):
     def __init__(self, size, x, y):
-        super().__init__(size, x, y, 'assets/skeleton/walk')
+        super().__init__(size, x, y, os.path.join(BASE_PATH, 'assets/skeleton/walk'))
         # TODO: refactor this and implement image resize
         self.rect.y += size - self.image.get_size()[1] + self.image.get_size()[1] / 8
         self.speed = randint(1, 2)

@@ -1,13 +1,13 @@
 import pygame as pg
-from os import walk
+import os
 from csv import reader
 
-from utils import TILE_SIZE
+from utils import TILE_SIZE, BASE_PATH
 
 def importFolder(path):
     surfaceList = []
 
-    for _, __, imageFiles in walk(path):
+    for _, __, imageFiles in os.walk(path):
         imageFiles.sort()
 
         for image in imageFiles:
@@ -67,12 +67,12 @@ class Button(pg.sprite.Sprite):
         self.text = text
         self.window = window
 
-        self.fontDir = 'fonts/manaspc.ttf'
+        self.fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
         self.font = pg.font.Font(self.fontDir, 20)
         self.text_col = pg.Color('black')
         
         self.mousePos = pg.mouse.get_pos()
-        self.sprites = importFolder('assets/buttons')
+        self.sprites = importFolder(os.path.join(BASE_PATH, 'assets/buttons'))
         self.image = self.sprites[0]
         self.rect = self.image.get_rect(center = (x,y))
 

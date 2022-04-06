@@ -1,9 +1,10 @@
+import os
 import pygame as pg
 from game_scenery.tiles import Decoration, Tile, StaticTile, Crate
 from game_entities.enemy import Enemy
 from game_entities.fultano import Fultano
 from resources import importCsvLayout, importCutGraphics
-from utils import SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE
+from utils import SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE, BASE_PATH
 
 class Level:
     '''
@@ -72,7 +73,7 @@ class Level:
 
                     # Add terrain tiles to the sprite group
                     if type == 'terrain':
-                        terrainTileList = importCutGraphics('assets/world/terrain/terrain_tiles.png')
+                        terrainTileList = importCutGraphics(os.path.join(BASE_PATH, 'assets/world/terrain/terrain_tiles.png'))
                         tileSurface = terrainTileList[int(val)]
                         sprite = StaticTile(TILE_SIZE, x, y, tileSurface)
                         
@@ -103,7 +104,7 @@ class Level:
                     sprite = Fultano((x, y))
                     self.player.add(sprite)
                 if val == '1':
-                    beginSurface = pg.image.load('assets/fultano/hat.png').convert_alpha()
+                    beginSurface = pg.image.load(os.path.join(BASE_PATH, 'assets/fultano/hat.png')).convert_alpha()
                     sprite = StaticTile(TILE_SIZE, x, y, beginSurface)
                     self.goal.add(sprite)
                     
