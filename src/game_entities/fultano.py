@@ -109,16 +109,16 @@ class Fultano(pg.sprite.Sprite):
             
             self.collision_side = None
 
-        if keys[pg.K_d] and not self.attacking:
+        if keys[pg.K_RIGHT] and not self.attacking:
             self.direction.x = 1
             self.facing_right = True
-        elif keys[pg.K_a] and not self.attacking:
+        elif keys[pg.K_LEFT] and not self.attacking:
             self.direction.x = -1
             self.facing_right = False
         else:
             self.direction.x = 0
 
-        if keys[pg.K_w] and self.onGround:
+        if keys[pg.K_UP] and self.onGround:
             self.jump()
 
         if (keys[pg.K_c] or keys[pg.K_f] or keys[pg.K_v]) and self.onGround and self.direction.x == 0:
