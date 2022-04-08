@@ -50,6 +50,7 @@ class Level:
         # Skeletons
         self.skeletonLayout = importCsvLayout(levelData['skeleton'])
         self.skeletonSprites = self.createTileGroup(self.skeletonLayout, 'skeleton')
+        self.enemy_collidable_sprites = self.skeletonSprites.sprites()
 
         # Constraint
         self.constraintLayout = importCsvLayout(levelData['constraints'])
@@ -136,16 +137,19 @@ class Level:
 
     def player_enemy_collision(self):
         player = self.player.sprite
-        collidable_sprites = self.skeletonSprites.sprites()
 
-        for sprite in collidable_sprites:
+        for sprite in self.enemy_collidable_sprites:
             if sprite.rect.colliderect(player.rect):
                 if (player.rect.x - sprite.rect.x) > 0:
                     self.player.sprite.collision_side = -1
                 else:
                     self.player.sprite.collision_side = 1
 
-                if player.blinking == False:
+                if player.attacking == True:
+                    sprite.die()
+                    self.enemy_collidable_sprites.remove(sprite)
+                    
+                elif player.blinking == False:
                     player.health -= 1
                     print('Damage taken')
                     player.blinking = True

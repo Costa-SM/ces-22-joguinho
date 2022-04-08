@@ -13,6 +13,9 @@ class Enemy(AnimatedTile):
 
         self.rect.height = self.image.get_rect().height - 20
         self.rect.y += 15
+
+        self.died = False
+        self.dying = False
     
     def move(self):
         self.rect.x += self.speed
@@ -24,8 +27,18 @@ class Enemy(AnimatedTile):
     def reverse(self):
         self.speed *= -1
     
+    def die(self):
+        flip = True if self.speed < 0 else False
+        self.speed = 0
+        self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/dead_near'), flip)
+        self.dying = True
+    
     def update(self, shift):
         self.rect.x += shift
-        self.animate()
-        self.move()
-        self.reverse_image()
+
+        if self.dying == True and int(self.frameIndex) == len(self.frames) - 1:
+            self.died = True
+        if self.died == False:
+            self.animate()
+            self.move()
+            self.reverse_image()
