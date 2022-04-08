@@ -31,6 +31,7 @@ class Game():
         self.clock = pg.time.Clock()
         self.start = False
         self.paused = False
+        self.restart = False
         self.level = Level(level_1, self.screen)
 
     def initScreen(self):
@@ -51,6 +52,7 @@ class Game():
         Function that updates the game.
         
         '''
+
         if not self.start:
             self.start = main(self.start, self.screen, pg.time)
         # Event handler.
@@ -73,8 +75,12 @@ class Game():
 
         if self.level.resetLevel == True:
             pg.mixer.music.pause()
-            self.start = death(self.start, self.screen, pg.time)
-            self.initVariables()
+            self.start, self.restart = death(self.start, self.screen, pg.time, self.restart)
+            if self.restart:
+                self.initVariables()
+                self.start = True
+            else:
+                self.initVariables()
             self.initMedia()
 
         # Screen update
