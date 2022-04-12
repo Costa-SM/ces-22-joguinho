@@ -130,7 +130,8 @@ class Fultano(pg.sprite.Sprite):
             elif keys[pg.K_v]:
                 self.attackType = 'attack_3'
         else:
-            self.attacking = False
+            if self.frame_index == 0:
+                self.attacking = False
 
     def get_status(self):
         if self.attacking:
