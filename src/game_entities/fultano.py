@@ -131,7 +131,7 @@ class Fultano(pg.sprite.Sprite):
                 self.attackType = 'attack_3'
         else:
             if self.frame_index == 0:
-                self.attacking = False
+                self.attacking = False 
 
     def get_status(self):
         if self.attacking:
