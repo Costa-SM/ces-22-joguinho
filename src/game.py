@@ -2,6 +2,7 @@ import pygame as pg
 import sys
 from menus import main, pause, death
 from game_scenery.level import Level
+from game_scenery.game_data import level_0
 from game_scenery.game_data import level_1
 from utils import *
 
@@ -31,7 +32,7 @@ class Game():
         self.start = False
         self.paused = False
         self.restart = False
-        self.level = Level(level_1, self.screen)
+        self.level = Level(level_0, self.screen)
 
     def initScreen(self):
         '''
