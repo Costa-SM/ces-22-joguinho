@@ -71,9 +71,8 @@ def death(start, screen, clock, restart):
         for event in pg.event.get():
             if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
-            if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or main.draw_button():    
+            if main.draw_button():    
                 start = False
-                pg.mixer.music.unpause()
         pg.display.update()
         clock.Clock().tick(60)
     return start, restart
