@@ -10,7 +10,7 @@ pg.init()
 
 class Game():
     '''
-    Class that represents the game engine.
+    Class that represents the game engine
     
     '''
 

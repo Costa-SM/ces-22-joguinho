@@ -8,7 +8,7 @@ from utils import SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE, BASE_PATH
 
 class Level:
     '''
-    Class that represents the game level.
+    Class that represents the game level
     
     '''
     def __init__(self, levelData, surface):

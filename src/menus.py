@@ -3,6 +3,7 @@ import os
 from resources import Button
 from utils import BASE_PATH
 
+
 def main(start, screen, clock):
     play = Button(800, 200, '   Play', screen, 'large')
     settings = Button(800, 350, 'Settings', screen, 'normal')

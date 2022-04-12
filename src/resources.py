@@ -21,7 +21,7 @@ def importCsvLayout(path):
     '''
     Function that imports our .csv level layout
     :param path: the .csv file path.
-    :type levelData: string.
+    :type levelData: string
     :rtype: list.
 
     '''
