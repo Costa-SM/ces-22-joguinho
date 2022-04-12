@@ -1,4 +1,3 @@
-from textwrap import dedent
 import pygame as pg
 import sys
 from menus import main, pause, death

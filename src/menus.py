@@ -1,5 +1,3 @@
-from ast import Break
-from pdb import Restart
 import pygame as pg
 import os
 from resources import Button
