@@ -105,3 +105,19 @@ class Button(pg.sprite.Sprite):
         self.window.blit(text_img, (self.x - self.rect.width/4 - text_len/6, self.y - self.rect.height/4))
 
         return self.action
+
+def tutorial(window):
+    fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
+    font = pg.font.Font(fontDir, 30)
+    text_col = pg.Color('white')
+    text_img = font.render("Welcome!", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 100))
+    font = pg.font.Font(fontDir, 20)
+    text_img = font.render("Use arrow keys to move yourself", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 150))
+    text_img = font.render("Use C, F or V to attack", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 200))
+ 
