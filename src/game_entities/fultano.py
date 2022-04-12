@@ -8,7 +8,7 @@ class Fultano(pg.sprite.Sprite):
         super().__init__()
         self.import_character_assets()
         self.frame_index = 0
-        self.animation_speed = 0.075
+        self.animation_speed = 0.1
         self.image = self.animations['idle'][self.frame_index]
         self.image = pg.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect(topleft = pos)
@@ -31,6 +31,7 @@ class Fultano(pg.sprite.Sprite):
         self.on_left = False
         self.on_right = False
         self.attacking = False
+        self.attackType = 'attack_1'
 
         # Player hurt
         self.timeHurted = 10
@@ -39,7 +40,7 @@ class Fultano(pg.sprite.Sprite):
 
     def import_character_assets(self):
         character_path = ASSETS_DIR + '/fultano/'
-        self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[]}
+        self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[], 'attack_2':[], 'attack_3':[], 'die':[]}
 
         for animation in self.animations.keys():
             full_path = character_path + animation
@@ -98,7 +99,7 @@ class Fultano(pg.sprite.Sprite):
 
         # If Fultano has been damaged, ignore input and get pushed back
         if self.collision_side != None:
-            if self.countHurted < 0.5:
+            if self.countHurted < 0.5 and self.blinking:
                 self.direction.x = -self.collision_side
 
                 if not self.onGround:
@@ -120,14 +121,20 @@ class Fultano(pg.sprite.Sprite):
         if keys[pg.K_UP] and self.onGround:
             self.jump()
 
-        if keys[pg.K_c] and self.onGround and self.direction.x == 0:
+        if (keys[pg.K_c] or keys[pg.K_f] or keys[pg.K_v]) and self.onGround and self.direction.x == 0:
             self.attacking = True
+            if keys[pg.K_c]:
+                self.attackType = 'attack_1'
+            elif keys[pg.K_f]:
+                self.attackType = 'attack_2'
+            elif keys[pg.K_v]:
+                self.attackType = 'attack_3'
         else:
             self.attacking = False
 
     def get_status(self):
         if self.attacking:
-            self.status = 'attack_1'
+            self.status = self.attackType
         else:
             if self.direction.y < 0:
                 self.status = 'jump'

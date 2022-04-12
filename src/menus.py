@@ -1,4 +1,3 @@
-from pdb import Restart
 import pygame as pg
 import os
 from resources import Button
@@ -54,28 +53,27 @@ def pause(paused, screen, clock):
         clock.Clock().tick(60)
     return paused
 
-def death(start, screen, clock):
+def death(start, screen, clock, restart):
     main = Button(500, 300, '  Menu', screen, 'normal')
-    restart = Button(500, 400, ' Restart', screen, 'normal')
+    reset = Button(500, 400, ' Restart', screen, 'normal')
     quit = Button(500, 500, '  Quit', screen, 'normal')
     fontDir = 'fonts/manaspc.ttf'
-    while start:
+    while start and not restart:
         screen.fill((36, 37, 77))
         text_img = pg.font.Font(fontDir, 70).render('Game Over', True, 'black')
         screen.blit(text_img, (300, 100))
         quit.draw_button()
-        restart.draw_button()
+        if reset.draw_button():
+            restart = True
         if main.draw_button():
             start = False
             pg.mixer.music.unpause()
         for event in pg.event.get():
             if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
-            if restart.draw_button():
-                pass #TODO
             if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or main.draw_button():    
                 start = False
                 pg.mixer.music.unpause()
         pg.display.update()
         clock.Clock().tick(60)
-    return start
+    return start, restart
