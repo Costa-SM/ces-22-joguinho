@@ -80,7 +80,7 @@ class Game():
 
 
       #  print(self.level.levelData == level_1, self.timeSinceEnter)
-        if self.level.levelData == level_1 and self.timeSinceEnter < 8000:
+        if self.level.levelData == level_0 and self.timeSinceEnter < 8000:
             tutorial(self.screen)
 
         # Check if level will reset
