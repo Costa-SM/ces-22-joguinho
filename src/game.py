@@ -1,7 +1,9 @@
 import pygame as pg
 import sys
+from resources import tutorial
 from menus import main, pause, death
 from game_scenery.level import Level
+from game_scenery.game_data import level_0
 from game_scenery.game_data import level_1
 from utils import *
 
@@ -9,7 +11,7 @@ pg.init()
 
 class Game():
     '''
-    Class that represents the game engine.
+    Class that represents the game engine
     
     '''
 
@@ -27,11 +29,13 @@ class Game():
         Function that initializes the game variables.
         
         '''
+        self.startTime = 0
+        self.timeSinceEnter = 0
         self.clock = pg.time.Clock()
         self.start = False
         self.paused = False
         self.restart = False
-        self.level = Level(level_1, self.screen)
+        self.level = Level(level_0, self.screen)
 
     def initScreen(self):
         '''
@@ -54,7 +58,11 @@ class Game():
 
         if not self.start:
             self.start = main(self.start, self.screen, pg.time)
+            self.startTime = pg.time.get_ticks()
+        
+        self.timeSinceEnter = pg.time.get_ticks() - self.startTime
         # Event handler.
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -69,6 +77,11 @@ class Game():
         
         # Level loading
         self.level.run()
+
+
+      #  print(self.level.levelData == level_1, self.timeSinceEnter)
+        if self.level.levelData == level_0 and self.timeSinceEnter < 8000:
+            tutorial(self.screen)
 
         # Check if level will reset
 

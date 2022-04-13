@@ -3,6 +3,7 @@ import os
 from resources import Button
 from utils import BASE_PATH
 
+
 def main(start, screen, clock):
     play = Button(800, 200, '   Play', screen, 'large')
     settings = Button(800, 350, 'Settings', screen, 'normal')
@@ -71,9 +72,8 @@ def death(start, screen, clock, restart):
         for event in pg.event.get():
             if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
-            if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or main.draw_button():    
+            if main.draw_button():    
                 start = False
-                pg.mixer.music.unpause()
         pg.display.update()
         clock.Clock().tick(60)
     return start, restart

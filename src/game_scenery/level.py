@@ -8,7 +8,7 @@ from utils import SCREEN_HEIGHT, SCREEN_WIDTH, TILE_SIZE, BASE_PATH
 
 class Level:
     '''
-    Class that represents the game level.
+    Class that represents the game level
     
     '''
     def __init__(self, levelData, surface):
@@ -20,6 +20,7 @@ class Level:
         :type surface: pygame Surface.
         
         '''
+        self.levelData = levelData
         self.displaySurface = surface
 
         self.resetLevel = False
@@ -28,7 +29,7 @@ class Level:
         self.worldShift = 0
 
         # Player
-        self.playerLayout = importCsvLayout(levelData['player'])
+        self.playerLayout = importCsvLayout(self.levelData['player'])
         self.player = pg.sprite.GroupSingle()
         self.goal = pg.sprite.GroupSingle()
         self.playerSetup(self.playerLayout)
