@@ -150,6 +150,7 @@ class Level:
                     self.enemy_collidable_sprites.remove(sprite)
                     
                 elif player.blinking == False:
+                    sprite.attack()
                     player.health -= 1
                     print('Damage taken')
                     player.blinking = True
@@ -231,14 +232,30 @@ class Level:
 
         # Hack to fix draw position
         for skeleton in self.skeletonSprites:
-            skeleton.rect.x -= 25
-            skeleton.rect.y -= 15
+            if skeleton.attacking == True:
+                if skeleton.previousSpeed < 0:
+                    skeleton.rect.x -= 90
+                    skeleton.rect.y -= 50
+                else:
+                    skeleton.rect.x -= 60
+                    skeleton.rect.y -= 50
+            else:
+                skeleton.rect.x -= 25
+                skeleton.rect.y -= 15
 
         self.skeletonSprites.draw(self.displaySurface)
 
         for skeleton in self.skeletonSprites:
-            skeleton.rect.x += 25
-            skeleton.rect.y += 15
+            if skeleton.attacking == True:
+                if skeleton.previousSpeed < 0:
+                    skeleton.rect.x += 90
+                    skeleton.rect.y += 50
+                else:
+                    skeleton.rect.x += 60
+                    skeleton.rect.y += 50
+            else:
+                skeleton.rect.x += 25
+                skeleton.rect.y += 15
 
         # Run player
         self.player.update()
