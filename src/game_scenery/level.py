@@ -24,6 +24,7 @@ class Level:
         self.displaySurface = surface
 
         self.resetLevel = False
+        self.advanceLevel = False
         
         # Layout moving speed
         self.worldShift = 0
@@ -208,6 +209,7 @@ class Level:
         # When the goal is reached, go back to the menu
         elif self.goal.sprite.rect.colliderect(self.player.sprite.rect):
             self.resetLevel = True
+            self.advanceLevel = True
         
     def run(self):
         '''

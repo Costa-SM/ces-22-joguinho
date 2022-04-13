@@ -3,8 +3,7 @@ import sys
 from resources import tutorial
 from menus import main, pause, death
 from game_scenery.level import Level
-from game_scenery.game_data import level_0
-from game_scenery.game_data import level_1
+from game_scenery.game_data import level_0, level_1
 from utils import *
 
 pg.init()
@@ -20,6 +19,7 @@ class Game():
         Game class' constructor.
         
         '''
+        self.currentLevel = 0
         self.initScreen()
         self.initVariables()
         self.initMedia()
@@ -35,7 +35,8 @@ class Game():
         self.start = False
         self.paused = False
         self.restart = False
-        self.level = Level(level_0, self.screen)
+        self.levels = [level_0, level_1]
+        self.level = Level(self.levels[self.currentLevel], self.screen)
 
     def initScreen(self):
         '''
@@ -80,7 +81,7 @@ class Game():
 
 
       #  print(self.level.levelData == level_1, self.timeSinceEnter)
-        if self.level.levelData == level_0 and self.timeSinceEnter < 8000:
+        if self.level.levelData == self.levels[0] and self.timeSinceEnter < 8000:
             tutorial(self.screen)
 
         # Check if level will reset
@@ -88,11 +89,15 @@ class Game():
         if self.level.resetLevel == True:
             pg.mixer.music.pause()
             self.start, self.restart = death(self.start, self.screen, pg.time, self.restart)
-            if self.restart:
-                self.initVariables()
+            if self.restart == True:
                 self.start = True
-            else:
-                self.initVariables()
+            elif self.level.advanceLevel == True:
+                self.start = True
+                self.currentLevel += 1
+                if self.currentLevel > len(self.levels):
+                    self.currentLevel = 0
+
+            self.initVariables()
             self.initMedia()
 
         # Screen update
