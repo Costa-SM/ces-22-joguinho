@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from resources import tutorial
-from menus import main, pause, death
+from menus import main, pause, death, authors
 from game_scenery.level import Level
 from game_scenery.game_data import level_0
 from game_scenery.game_data import level_1
@@ -35,7 +35,10 @@ class Game():
         self.start = False
         self.paused = False
         self.restart = False
+        self.credits = False
+        self.won = False
         self.level = Level(level_0, self.screen)
+        self.finalLevel = Level(level_1, self.screen) #TODO: set final level
 
     def initScreen(self):
         '''
@@ -57,7 +60,11 @@ class Game():
         '''
 
         if not self.start:
-            self.start = main(self.start, self.screen, pg.time)
+            print("menu inicial")
+            self.start, self.credits = main(self.start, self.screen, pg.time,  self.credits)
+            if self.credits:
+                print("creditos")
+                self.start, self.credits = authors(self.screen)
             self.startTime = pg.time.get_ticks()
         
         self.timeSinceEnter = pg.time.get_ticks() - self.startTime
@@ -76,11 +83,11 @@ class Game():
         self.screen.blit(pg.image.load(ASSETS_DIR + '/background/background_3.jpg'), (0,0))
         
         # Level loading
-        self.level.run()
-
+        if self.start == True:
+            self.level.run()
 
       #  print(self.level.levelData == level_1, self.timeSinceEnter)
-        if self.level.levelData == level_0 and self.timeSinceEnter < 8000:
+        if self.start and self.level.levelData == level_0 and self.timeSinceEnter < 8000:
             tutorial(self.screen)
 
         # Check if level will reset
