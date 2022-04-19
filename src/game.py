@@ -88,16 +88,18 @@ class Game():
 
         if self.level.resetLevel == True:
             pg.mixer.music.pause()
-            self.start, self.restart = death(self.start, self.screen, pg.time, self.restart)
-            if self.restart == True:
-                self.start = True
-            elif self.level.advanceLevel == True:
-                self.start = True
+            if self.level.advanceLevel == True:
                 self.currentLevel += 1
+                self.initVariables()
+                self.start = False
                 if self.currentLevel > len(self.levels):
                     self.currentLevel = 0
+            self.start, self.restart = death(self.start, self.screen, pg.time, self.restart)
+            self.start = True
+            if self.restart == True:
+                self.initVariables()
+                self.start = True
 
-            self.initVariables()
             self.initMedia()
 
         # Screen update
