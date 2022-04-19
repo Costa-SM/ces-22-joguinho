@@ -37,6 +37,7 @@ class Fultano(pg.sprite.Sprite):
         self.timeHurted = 10
         self.blinking = False
         self.countHurted = 0
+        self.waitHurt = False
 
     def import_character_assets(self):
         character_path = ASSETS_DIR + '/fultano/'
@@ -62,7 +63,7 @@ class Fultano(pg.sprite.Sprite):
 
         if self.blinking == True:
             self.countHurted += 0.1
-            if int(self.countHurted) % 2 == 0:
+            if int(self.countHurted) % 2 == 1 and self.countHurted > 1.3:
                 image = pg.Surface((100, 74), pg.SRCALPHA, 16)
 
         if int(self.countHurted) >= self.timeHurted:
@@ -98,8 +99,8 @@ class Fultano(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
 
         # If Fultano has been damaged, ignore input and get pushed back
-        if self.collision_side != None:
-            if self.countHurted < 0.5 and self.blinking:
+        if (self.collision_side != None):
+            if self.countHurted > 1.3 and self.countHurted < 1.8 and self.blinking:
                 self.direction.x = -self.collision_side
 
                 if not self.onGround:

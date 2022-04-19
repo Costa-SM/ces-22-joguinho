@@ -150,11 +150,16 @@ class Level:
                 if player.attacking == True:
                     sprite.die()
                     self.enemy_collidable_sprites.remove(sprite)
-                    
+
+                if(player.countHurted > 1.2 and player.waitHurt):
+                        player.health -= 1
+                        player.waitHurt = False
+
                 elif player.blinking == False:
                     sprite.attack()
-                    player.health -= 1
+                
                     player.blinking = True
+                    player.waitHurt = True
 
                     self.wrong_side = ((self.player.sprite.rect.x - sprite.rect.x > 0 and sprite.previousSpeed < 0) or
                                         (sprite.rect.x - self.player.sprite.rect.x > 0 and sprite.previousSpeed > 0))
