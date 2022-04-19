@@ -28,6 +28,7 @@ class Enemy(AnimatedTile):
     
     def reverse(self):
         self.speed *= -1
+        self.previousSpeed *= -1
 
     def attack(self):
         flip = True if self.speed < 0 else False
