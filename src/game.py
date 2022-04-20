@@ -103,11 +103,12 @@ class Game():
             pg.mixer.music.pause()
             if self.level.advanceLevel == True:
                 self.currentLevel += 1
-                self.initVariables()
-                self.start = True
                 if self.currentLevel == self.maxLevel + 1:
                     self.start = win(self.start, self.screen, pg.time)
-                    self.currentLevel = 0
+                    self.currentLevel = -1
+                else:
+                    self.initVariables()
+                    self.start = True                
             else:
                 if self.dead == True:
                     self.start, self.restart, self.dead = death(self.start, self.screen, pg.time, self.restart, self.dead)
