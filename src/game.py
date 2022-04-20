@@ -47,9 +47,10 @@ class Game():
 
     def initMedia(self):
         pg.mixer.init()
-        pg.mixer.music.load(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
-        pg.mixer.music.set_volume(0.1)
-        pg.mixer.music.play(-1)
+        chan1 = pg.mixer.Channel(1)
+        sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
+        chan1.queue(sound1)
+        chan1.set_volume(0.1)  
     
     def update(self):
         '''

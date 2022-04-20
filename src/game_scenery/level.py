@@ -36,6 +36,7 @@ class Level:
         self.playerSetup(self.playerLayout)
         self.playerOnGround = False
         self.current_x = None
+        self.voidFall = False
         
         # Terrain variables
         self.terrainLayout = importCsvLayout(levelData['terrain'])
@@ -148,6 +149,11 @@ class Level:
                     self.player.sprite.collision_side = 1
 
                 if player.attacking == True:
+                    chan2 = pg.mixer.Channel(2)
+                    sound2 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/skeleton-dying.mp3'))
+                    chan2.queue(sound2)
+                    chan2.set_volume(0.1)  
+
                     sprite.die()
                     self.enemy_collidable_sprites.remove(sprite)
                     
@@ -202,7 +208,17 @@ class Level:
     def resetAllLevel(self):
         player = self.player.sprite
         if player.rect.bottom >= SCREEN_HEIGHT + 200:
-            self.resetLevel = True
+            if (self.voidFall == False):
+                pg.mixer.quit()
+                pg.mixer.init()
+                chan1 = pg.mixer.Channel(1)
+                sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/falling-dying.mp3'))
+                chan1.queue(sound1)
+                chan1.set_volume(0.1)
+
+            self.voidFall = True
+            if player.rect.bottom >= SCREEN_HEIGHT + 5000:
+                self.resetLevel = True
         elif player.health == 0:
             self.resetLevel = True
         
