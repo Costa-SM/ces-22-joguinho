@@ -124,3 +124,24 @@ def authors(window):
                 print("esc")
                 return False, False
         pg.display.update()
+
+def win(start, screen, clock):
+    main = Button(500, 300, '  Menu', screen, 'normal')
+    quit = Button(500, 450, '  Quit', screen, 'normal')
+    fontDir = 'fonts/manaspc.ttf'
+    while start:
+        screen.fill((36, 37, 77))
+        text_img = pg.font.Font(fontDir, 70).render(' You Won!', True, 'black')
+        screen.blit(text_img, (300, 100))
+        quit.draw_button()
+        if main.draw_button():
+            start = False
+            pg.mixer.music.unpause()
+        for event in pg.event.get():
+            if event.type == pg.QUIT or quit.draw_button():
+                pg.quit()
+            if main.draw_button():    
+                start = False
+        pg.display.update()
+        clock.Clock().tick(60)
+    return start
