@@ -57,23 +57,25 @@ class AnimatedTile(Tile):
         super().__init__(size, x, y)
         self.frames = importFolder(path)
         self.frameIndex = 0
-        self.image = self.frames[self.frameIndex]
-        self.image = pg.transform.scale(self.image, (100, 96))
         self.flip = False
+        self.size = (100, 96)
+        self.image = self.frames[self.frameIndex]
+        self.image = pg.transform.scale(self.image, self.size)
 
-    def changeState(self, path, flip):
+    def changeState(self, path, flip, size):
+        self.size = size
         self.flip = flip
         self.frames = importFolder(path)
         self.frameIndex = 0
         self.image = self.frames[self.frameIndex]
-        self.image = pg.transform.scale(self.image, (100, 96))
+        self.image = pg.transform.scale(self.image, self.size)
 
     def animate(self):
         self.frameIndex += 0.15
         if self.frameIndex >= len(self.frames):
             self.frameIndex = 0 
         self.image = self.frames[int(self.frameIndex)]
-        self.image = pg.transform.scale(self.image, (100, 96))
+        self.image = pg.transform.scale(self.image, self.size)
         if self.flip == True:
             self.image = pg.transform.flip(self.image, True, False)
 

@@ -24,6 +24,7 @@ class Level:
         self.displaySurface = surface
 
         self.resetLevel = False
+        self.advanceLevel = False
         
         # Layout moving speed
         self.worldShift = 0
@@ -151,9 +152,15 @@ class Level:
                     self.enemy_collidable_sprites.remove(sprite)
                     
                 elif player.blinking == False:
+                    sprite.attack()
                     player.health -= 1
-                    print('Damage taken')
                     player.blinking = True
+
+                    self.wrong_side = ((self.player.sprite.rect.x - sprite.rect.x > 0 and sprite.previousSpeed < 0) or
+                                        (sprite.rect.x - self.player.sprite.rect.x > 0 and sprite.previousSpeed > 0))
+                    
+                    if(self.wrong_side):
+                        sprite.reverse()
 
     def vertical_movement_collision(self):
         player = self.player.sprite
@@ -207,6 +214,7 @@ class Level:
         # When the goal is reached, go back to the menu
         elif self.goal.sprite.rect.colliderect(self.player.sprite.rect):
             self.resetLevel = True
+            self.advanceLevel = True
         
     def run(self):
         '''
@@ -232,14 +240,34 @@ class Level:
 
         # Hack to fix draw position
         for skeleton in self.skeletonSprites:
-            skeleton.rect.x -= 25
-            skeleton.rect.y -= 15
+            if skeleton.attacking == True:
+                if skeleton.previousSpeed < 0:
+                    skeleton.rect.x -= 90
+                    skeleton.rect.y -= 50
+                else:
+                    skeleton.rect.x -= 60
+                    skeleton.rect.y -= 50
+
+                if(self.wrong_side):
+                    skeleton.image = pg.transform.flip(skeleton.image, True, False)
+
+            else:
+                skeleton.rect.x -= 25
+                skeleton.rect.y -= 15
 
         self.skeletonSprites.draw(self.displaySurface)
 
         for skeleton in self.skeletonSprites:
-            skeleton.rect.x += 25
-            skeleton.rect.y += 15
+            if skeleton.attacking == True:
+                if skeleton.previousSpeed < 0:
+                    skeleton.rect.x += 90
+                    skeleton.rect.y += 50
+                else:
+                    skeleton.rect.x += 60
+                    skeleton.rect.y += 50
+            else:
+                skeleton.rect.x += 25
+                skeleton.rect.y += 15
 
         # Run player
         self.player.update()

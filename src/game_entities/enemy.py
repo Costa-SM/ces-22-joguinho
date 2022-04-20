@@ -16,6 +16,8 @@ class Enemy(AnimatedTile):
 
         self.died = False
         self.dying = False
+        self.attacking = False
+        self.previousSpeed = self.speed
     
     def move(self):
         self.rect.x += self.speed
@@ -26,11 +28,19 @@ class Enemy(AnimatedTile):
     
     def reverse(self):
         self.speed *= -1
+        self.previousSpeed *= -1
+
+    def attack(self):
+        flip = True if self.speed < 0 else False
+        self.previousSpeed = self.speed
+        self.speed = 0
+        self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/attack2'), flip, (200, 130))
+        self.attacking = True
     
     def die(self):
         flip = True if self.speed < 0 else False
         self.speed = 0
-        self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/dead_near'), flip)
+        self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/dead_near'), flip, (100, 96))
         self.dying = True
     
     def update(self, shift):
@@ -38,6 +48,11 @@ class Enemy(AnimatedTile):
 
         if self.dying == True and int(self.frameIndex) == len(self.frames) - 1:
             self.died = True
+        if self.attacking == True and int(self.frameIndex) == len(self.frames) - 1:
+            self.attacking = False
+            self.speed = self.previousSpeed
+            flip = False
+            self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/walk'), flip, (100, 96))
         if self.died == False:
             self.animate()
             self.move()
