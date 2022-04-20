@@ -63,7 +63,7 @@ class Fultano(pg.sprite.Sprite):
 
         if self.blinking == True:
             self.countHurted += 0.1
-            if int(self.countHurted) % 2 == 1 and self.countHurted > 1.3:
+            if int(self.countHurted) % 2 == 1 and self.countHurted > 1.3 and not self.waitHurt:
                 image = pg.Surface((100, 74), pg.SRCALPHA, 16)
 
         if int(self.countHurted) >= self.timeHurted:
