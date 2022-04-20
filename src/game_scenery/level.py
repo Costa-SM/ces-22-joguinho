@@ -160,8 +160,13 @@ class Level:
                 elif player.blinking == False:
                     sprite.attack()
                     player.health -= 1
-                    print('Damage taken')
                     player.blinking = True
+
+                    self.wrong_side = ((self.player.sprite.rect.x - sprite.rect.x > 0 and sprite.previousSpeed < 0) or
+                                        (sprite.rect.x - self.player.sprite.rect.x > 0 and sprite.previousSpeed > 0))
+                    
+                    if(self.wrong_side):
+                        sprite.reverse()
 
     def vertical_movement_collision(self):
         player = self.player.sprite
@@ -258,6 +263,10 @@ class Level:
                 else:
                     skeleton.rect.x -= 60
                     skeleton.rect.y -= 50
+
+                if(self.wrong_side):
+                    skeleton.image = pg.transform.flip(skeleton.image, True, False)
+
             else:
                 skeleton.rect.x -= 25
                 skeleton.rect.y -= 15
