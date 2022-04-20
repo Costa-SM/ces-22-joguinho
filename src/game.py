@@ -1,7 +1,7 @@
 import pygame as pg
 import sys
 from resources import tutorial
-from menus import main, pause, death
+from menus import main, pause, death, authors
 from game_scenery.level import Level
 from game_scenery.game_data import level_0, level_1
 from utils import *
@@ -34,6 +34,7 @@ class Game():
         self.clock = pg.time.Clock()
         self.start = False
         self.dead = True
+        self.credits = False
         self.paused = False
         self.restart = False
         self.levels = [level_0, level_1]
@@ -60,9 +61,15 @@ class Game():
         '''
 
         if not self.start:
-            self.start = main(self.start, self.screen, pg.time)
+            print("menu inicial")
+            self.currentLevel = 0
+            self.start, self.credits = main(self.start, self.screen, pg.time,  self.credits)
+            if self.credits:
+                print("creditos")
+                self.start, self.credits = authors(self.screen)
+                self.level.resetLevel = False
             self.startTime = pg.time.get_ticks()
-        
+
         self.timeSinceEnter = pg.time.get_ticks() - self.startTime
         # Event handler.
 
@@ -79,7 +86,9 @@ class Game():
         self.screen.blit(pg.image.load(ASSETS_DIR + '/background/background_3.jpg'), (0,0))
         
         # Level loading
-        self.level.run()
+        
+        if self.start:
+            self.level.run()
 
 
       #  print(self.level.levelData == level_1, self.timeSinceEnter)
@@ -89,6 +98,7 @@ class Game():
         # Check if level will reset
 
         if self.level.resetLevel == True:
+            print("a")
             pg.mixer.music.pause()
             if self.level.advanceLevel == True:
                 self.currentLevel += 1

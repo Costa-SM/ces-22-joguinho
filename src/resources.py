@@ -120,4 +120,7 @@ def tutorial(window):
     text_img = font.render("Use C, F or V to attack", True, text_col)
     text_len = text_img.get_width()
     window.blit(text_img, (500 - text_len/2, 200))
+    text_img = font.render("Go ahead and get to the end of each level to win", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 250))
  
