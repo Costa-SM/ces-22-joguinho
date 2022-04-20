@@ -54,7 +54,7 @@ def pause(paused, screen, clock):
         clock.Clock().tick(60)
     return paused
 
-def death(start, screen, clock, restart):
+def death(start, screen, clock, restart, dead):
     main = Button(500, 300, '  Menu', screen, 'normal')
     reset = Button(500, 400, ' Restart', screen, 'normal')
     quit = Button(500, 500, '  Quit', screen, 'normal')
@@ -66,14 +66,17 @@ def death(start, screen, clock, restart):
         quit.draw_button()
         if reset.draw_button():
             restart = True
+            dead = False
         if main.draw_button():
             start = False
+            dead = False
             pg.mixer.music.unpause()
         for event in pg.event.get():
             if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
             if main.draw_button():    
                 start = False
+                dead = False
         pg.display.update()
         clock.Clock().tick(60)
-    return start, restart
+    return start, restart, dead

@@ -41,7 +41,7 @@ class Fultano(pg.sprite.Sprite):
 
     def import_character_assets(self):
         character_path = ASSETS_DIR + '/fultano/'
-        self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[], 'attack_2':[], 'attack_3':[], 'die':[]}
+        self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[], 'attack_2':[], 'attack_3':[]}
 
         for animation in self.animations.keys():
             full_path = character_path + animation

@@ -33,6 +33,7 @@ class Game():
         self.timeSinceEnter = 0
         self.clock = pg.time.Clock()
         self.start = False
+        self.dead = True
         self.paused = False
         self.restart = False
         self.levels = [level_0, level_1]
@@ -47,9 +48,10 @@ class Game():
 
     def initMedia(self):
         pg.mixer.init()
-        pg.mixer.music.load(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
-        pg.mixer.music.set_volume(0.1)
-        pg.mixer.music.play(-1)
+        chan1 = pg.mixer.Channel(1)
+        sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
+        chan1.queue(sound1)
+        chan1.set_volume(0.1)  
     
     def update(self):
         '''
@@ -91,11 +93,15 @@ class Game():
             if self.level.advanceLevel == True:
                 self.currentLevel += 1
                 self.initVariables()
-                self.start = False
+                self.start = True
                 if self.currentLevel > len(self.levels):
                     self.currentLevel = 0
-            self.start, self.restart = death(self.start, self.screen, pg.time, self.restart)
-            self.start = True
+            else:
+                if self.dead == True:
+                    self.start, self.restart, self.dead = death(self.start, self.screen, pg.time, self.restart, self.dead)
+                else:
+                    self.initVariables()
+                    self.start = True
             if self.restart == True:
                 self.initVariables()
                 self.start = True
