@@ -1,6 +1,7 @@
 from utils import BASE_PATH
 import os
 
+# Level variables
 level_0 = {
     'terrain': os.path.join(BASE_PATH, 'levels/0/level_0_terrain.csv'),
     'bg_decoration': os.path.join(BASE_PATH, 'levels/0/level_0_bg_decoration.csv'),

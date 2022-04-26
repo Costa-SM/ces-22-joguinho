@@ -116,7 +116,7 @@ class Decoration(StaticTile):
         elif type == '12':
             super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/world/decoration/ArrowSign.png')).convert_alpha())
         
-        offset_y = y + size
-        self.rect = self.image.get_rect(bottomleft = (x, offset_y))
+        offsetY = y + size
+        self.rect = self.image.get_rect(bottomleft = (x, offsetY))
 
         

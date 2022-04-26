@@ -6,30 +6,30 @@ from utils import *
 class Fultano(pg.sprite.Sprite):
     def __init__(self, pos):
         super().__init__()
-        self.import_character_assets()
-        self.frame_index = 0
-        self.animation_speed = 0.1
-        self.image = self.animations['idle'][self.frame_index]
+        self.importCharacterAssets()
+        self.frameIndex = 0
+        self.animationSpeed = 0.1
+        self.image = self.animations['idle'][self.frameIndex]
         self.image = pg.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect(topleft = pos)
         self.health = FULTANO_HEALTH
         self.healthSprites = pg.sprite.Group()
-        self.last_status = None
-        self.collision_side = None
+        self.lastStatus = None
+        self.collisionSide = None
 
 		# player movement
         self.direction = pg.math.Vector2(0,0)
         self.speed = 8
         self.gravity = 0.8
-        self.jump_speed = -16
+        self.jumpSpeed = -16
 
 		# player status
         self.status = 'idle'
-        self.facing_right = True
+        self.facingRight = True
         self.onGround = False
-        self.on_ceiling = False
-        self.on_left = False
-        self.on_right = False
+        self.onCeiling = False
+        self.onLeft = False
+        self.onRight = False
         self.attacking = False
         self.attackType = 'attack_1'
 
@@ -39,26 +39,26 @@ class Fultano(pg.sprite.Sprite):
         self.countHurted = 0
         self.waitHurt = False
 
-    def import_character_assets(self):
-        character_path = ASSETS_DIR + '/fultano/'
+    def importCharacterAssets(self):
+        characterPath = ASSETS_DIR + '/fultano/'
         self.animations = {'idle':[],'run':[],'jump':[],'fall':[], 'attack_1':[], 'attack_2':[], 'attack_3':[]}
 
         for animation in self.animations.keys():
-            full_path = character_path + animation
-            self.animations[animation] = importFolder(full_path)
+            fullPath = characterPath + animation
+            self.animations[animation] = importFolder(fullPath)
 
     def animate(self):
-        if self.last_status != self.status:
-            self.frame_index = 0
+        if self.lastStatus != self.status:
+            self.frameIndex = 0
         
         animation = self.animations[self.status]
 
         # loop over frame index 
-        self.frame_index += self.animation_speed
-        if self.frame_index >= len(animation):
-            self.frame_index = 0
+        self.frameIndex += self.animationSpeed
+        if self.frameIndex >= len(animation):
+            self.frameIndex = 0
 
-        image = animation[int(self.frame_index)]
+        image = animation[int(self.frameIndex)]
         image = pg.transform.scale(image, (100, 74))
 
         if self.blinking == True:
@@ -70,52 +70,37 @@ class Fultano(pg.sprite.Sprite):
             self.countHurted = 0
             self.blinking = False
 
-        if self.facing_right:
+        if self.facingRight:
             self.image = image
         else:
-            flipped_image = pg.transform.flip(image,True,False)
-            self.image = flipped_image
-
-        # set the rect
-        #if self.onGround and self.on_right:
-        #    self.rect = self.image.get_rect(bottomright = self.rect.bottomright)
-        #elif self.onGround and self.on_left:
-        #    self.rect = self.image.get_rect(bottomleft = self.rect.bottomleft)
-        #elif self.onGround:
-        #    self.rect = self.image.get_rect(midbottom = self.rect.midbottom)
-        #elif self.on_ceiling and self.on_right:
-        #    self.rect = self.image.get_rect(topright = self.rect.topright)
-        #elif self.on_ceiling and self.on_left:
-        #    self.rect = self.image.get_rect(topleft = self.rect.topleft)
-        #elif self.on_ceiling:
-        #    self.rect = self.image.get_rect(midtop = self.rect.midtop)
+            flippedImage = pg.transform.flip(image,True,False)
+            self.image = flippedImage
 
         self.rect = pg.Rect(self.rect.x, self.rect.y, 50, self.image.get_rect().height)
 
-        #print(self.rect.x, self.rect.y)
-        self.last_status = self.status
+        self.lastStatus = self.status
 
-    def get_input(self):
+    def getInput(self):
         keys = pg.key.get_pressed()
 
         # If Fultano has been damaged, ignore input and get pushed back
-        if (self.collision_side != None):
+        if (self.collisionSide != None):
             if self.countHurted > 1.3 and self.countHurted < 1.8 and self.blinking:
-                self.direction.x = -self.collision_side
+                self.direction.x = -self.collisionSide
 
                 if not self.onGround:
                     self.jump()
                 
                 return
             
-            self.collision_side = None
+            self.collisionSide = None
 
         if keys[pg.K_RIGHT] and not self.attacking:
             self.direction.x = 1
-            self.facing_right = True
+            self.facingRight = True
         elif keys[pg.K_LEFT] and not self.attacking:
             self.direction.x = -1
-            self.facing_right = False
+            self.facingRight = False
         else:
             self.direction.x = 0
 
@@ -131,10 +116,10 @@ class Fultano(pg.sprite.Sprite):
             elif keys[pg.K_v]:
                 self.attackType = 'attack_3'
         else:
-            if self.frame_index == 0:
+            if self.frameIndex == 0:
                 self.attacking = False 
 
-    def get_status(self):
+    def getStatus(self):
         if self.attacking:
             self.status = self.attackType
         else:
@@ -148,23 +133,23 @@ class Fultano(pg.sprite.Sprite):
                 else:
                     self.status = 'idle'
 
-    def get_health(self):
+    def getHealth(self):
         
         for heart in range(int(self.health)):
             heartSurface = pg.image.load(os.path.join(BASE_PATH, 'assets/interface/heart.png')).convert_alpha()
             sprite = StaticTile(TILE_SIZE, 25 + 30*heart, 20, heartSurface)
             self.healthSprites.add(sprite)
 
-    def apply_gravity(self):
+    def applyGravity(self):
         self.direction.y += self.gravity
         self.rect.y += self.direction.y
 
     def jump(self):
         if self.status != 'jump':
-            self.direction.y = self.jump_speed
+            self.direction.y = self.jumpSpeed
 
     def update(self):
-        self.get_input()
-        self.get_status()
-        self.get_health()
+        self.getInput()
+        self.getStatus()
+        self.getHealth()
         self.animate()

@@ -22,7 +22,7 @@ class Enemy(AnimatedTile):
     def move(self):
         self.rect.x += self.speed
         
-    def reverse_image(self):
+    def reverseImage(self):
         if self.speed < 0:
             self.image = pg.transform.flip(self.image, True, False)
     
@@ -56,4 +56,4 @@ class Enemy(AnimatedTile):
         if self.died == False:
             self.animate()
             self.move()
-            self.reverse_image()
+            self.reverseImage()
