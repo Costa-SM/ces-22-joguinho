@@ -6,12 +6,12 @@ from game_scenery.level import Level
 from game_scenery.game_data import level_0, level_1
 from utils import *
 
-# Initializing PyGame
+# Initialize PyGame
 pg.init()
 
 class Game():
     '''
-    Class that represents the game engine
+    Class that represents the game engine.
     
     '''
     def __init__(self) -> None:
@@ -77,7 +77,6 @@ class Game():
                 self.start, self.credits = authors(self.screen)
                 self.level.resetLevel = False
             self.startTime = pg.time.get_ticks()
-
         self.timeSinceEnter = pg.time.get_ticks() - self.startTime
         # Event handler
         for event in pg.event.get():
