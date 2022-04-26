@@ -11,12 +11,12 @@ class Tile(pg.sprite.Sprite):
     def __init__(self, size, x, y):
         '''
         Tile class' constructor.
-        :param size: tile size.
-        :type size: int.
-        :param x: tile x coordinate.
-        :type x: int.
-        :param y: tile y coordinate.
-        :type y: int.
+        :param size: tile size
+        :type size: int
+        :param x: tile x coordinate
+        :type x: int
+        :param y: tile y coordinate
+        :type y: int
         
         '''
         super().__init__()
@@ -26,8 +26,9 @@ class Tile(pg.sprite.Sprite):
     def update(self, shift):
         '''
         Function that updates the tile's position.
-        :param shift: shift lenght.
-        :type size: int.
+        :param shift: shift lenght
+        :type size: int
+
         '''
         self.rect.x += shift
 
@@ -39,22 +40,39 @@ class StaticTile(Tile):
     def __init__(self, size, x, y, surface):
         '''
         StaticTile class' constructor.
-        :param size: tile size.
-        :type size: int.
-        :param x: tile x coordinate.
-        :type x: int.
-        :param y: tile y coordinate.
-        :type y: int.
-        :param surface: tile surface.
-        :type surface: pygame surface.
+        :param size: tile size
+        :type size: int
+        :param x: tile x coordinate
+        :type x: int
+        :param y: tile y coordinate
+        :type y: int
+        :param surface: tile surface
+        :type surface: pygame surface
         
         '''
         super().__init__(size, x, y)
         self.image = surface
 
 class AnimatedTile(Tile):
+    '''
+    Class that represents a animated tile.
+    
+    '''
     def __init__(self, size, x, y, path):
+        '''
+        AnimatedTile class' constructor.
+        :param size: tile size
+        :type size: int
+        :param x: tile x coordinate
+        :type x: int
+        :param y: tile y coordinate
+        :type y: int
+        :param path: sprite's path
+        :type path: string
+        
+        '''
         super().__init__(size, x, y)
+        # Animation vatiables
         self.frames = importFolder(path)
         self.frameIndex = 0
         self.flip = False
@@ -63,6 +81,16 @@ class AnimatedTile(Tile):
         self.image = pg.transform.scale(self.image, self.size)
 
     def changeState(self, path, flip, size):
+        '''
+        Function that changes the animated tile sprite.
+        :param path: sprite's path
+        :type path: string
+        :param flip: wheter the tile fliped
+        :type flip: bool
+        :param size: tile size
+        :type size: int
+        
+        '''
         self.size = size
         self.flip = flip
         self.frames = importFolder(path)
@@ -71,24 +99,65 @@ class AnimatedTile(Tile):
         self.image = pg.transform.scale(self.image, self.size)
 
     def animate(self):
+        '''
+        Function that animates the tile.
+        
+        '''
         self.frameIndex += 0.15
         if self.frameIndex >= len(self.frames):
             self.frameIndex = 0 
         self.image = self.frames[int(self.frameIndex)]
         self.image = pg.transform.scale(self.image, self.size)
+        # Flip image
         if self.flip == True:
             self.image = pg.transform.flip(self.image, True, False)
 
     def update(self, shift):
+        '''
+        Function that updates the tile's position.
+        :param shift: shift lenght
+        :type size: int
+
+        '''
         self.animate()
         self.rect.x += shift
 
 class Crate(StaticTile):
+    '''
+    Class that represents a crate tile.
+    
+    '''
     def __init__(self, size, x, y):
+        '''
+        Crate tile class' constructor.
+        :param size: tile size
+        :type size: int
+        :param x: tile x coordinate
+        :type x: int
+        :param y: tile y coordinate
+        :type y: int
+        
+        '''
         super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/world/terrain/Crate.png')).convert_alpha())
 
 class Decoration(StaticTile):
+    '''
+    Class that loads the image for a given tile.
+    
+    '''
     def __init__(self, size, x, y, type):
+        '''
+        Decoration class' constructor.
+        :param size: tile size
+        :type size: int
+        :param x: tile x coordinate
+        :type x: int
+        :param y: tile y coordinate
+        :type y: int
+        :param type: tile type
+        :type type: int
+        
+        '''
         if type == '0':
             super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/world/decoration/Bone (1).png')).convert_alpha())
         elif type == '1':
@@ -115,7 +184,7 @@ class Decoration(StaticTile):
             super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/world/decoration/Tree.png')).convert_alpha())
         elif type == '12':
             super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/world/decoration/ArrowSign.png')).convert_alpha())
-        
+        # Tile offset
         offsetY = y + size
         self.rect = self.image.get_rect(bottomleft = (x, offsetY))
 
