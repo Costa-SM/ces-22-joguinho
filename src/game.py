@@ -69,11 +69,9 @@ class Game():
         '''
         # Main menu logic
         if not self.start:
-            print("menu inicial")
             self.currentLevel = 0
             self.start, self.credits = main(self.start, self.screen, pg.time,  self.credits)
             if self.credits:
-                print("creditos")
                 self.start, self.credits = authors(self.screen)
                 self.level.resetLevel = False
             self.startTime = pg.time.get_ticks()
