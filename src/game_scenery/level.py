@@ -1,6 +1,6 @@
 import os
 import pygame as pg
-from game_scenery.tiles import Decoration, Tile, StaticTile, Crate
+from game_scenery.tiles import Decoration, Tile, StaticTile, Crate, Potion
 from game_entities.enemy import Enemy
 from game_entities.fultano import Fultano
 from resources import importCsvLayout, importCutGraphics
@@ -28,6 +28,10 @@ class Level:
         self.advanceLevel = False        
         # Layout moving speed
         self.worldShift = 0
+        # Song initialization
+        self.backgroundSong = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
+        self.songStartTime = 0
+        self.powerUpIsPlaying = False
         # Loading player
         self.playerLayout = importCsvLayout(self.levelData['player'])
         self.player = pg.sprite.GroupSingle()
@@ -37,21 +41,24 @@ class Level:
         self.currentX = None
         self.voidFall = False        
         # Loading terrain
-        self.terrainLayout = importCsvLayout(levelData['terrain'])
+        self.terrainLayout = importCsvLayout(self.levelData['terrain'])
         self.terrainSprites = self.createTileGroup(self.terrainLayout, 'terrain')
         # Loading decoration
-        self.decorationLayout = importCsvLayout(levelData['bg_decoration'])
+        self.decorationLayout = importCsvLayout(self.levelData['bg_decoration'])
         self.decorationSprites = self.createTileGroup(self.decorationLayout, 'bg_decoration')
         # Loading crates
-        self.crateLayout = importCsvLayout(levelData['crates'])
+        self.crateLayout = importCsvLayout(self.levelData['crates'])
         self.crateSprites = self.createTileGroup(self.crateLayout, 'crates')
         # Loading skeletons
-        self.skeletonLayout = importCsvLayout(levelData['skeleton'])
+        self.skeletonLayout = importCsvLayout(self.levelData['skeleton'])
         self.skeletonSprites = self.createTileGroup(self.skeletonLayout, 'skeleton')
         self.enemyCollidableSprites = self.skeletonSprites.sprites()
         # Loading constraints
-        self.constraintLayout = importCsvLayout(levelData['constraints'])
+        self.constraintLayout = importCsvLayout(self.levelData['constraints'])
         self.constraintSprites = self.createTileGroup(self.constraintLayout, 'constraints')
+        # Loading potions
+        self.potionLayout = importCsvLayout(self.levelData['potion'])
+        self.potionSprites = self.createTileGroup(self.potionLayout, 'potion')
 
     def createTileGroup(self, layout, type):
         '''
@@ -84,6 +91,8 @@ class Level:
                         sprite = Enemy(TILE_SIZE, x, y)
                     if type == 'constraints':
                         sprite = Tile(TILE_SIZE, x, y)
+                    if type == 'potion':
+                        sprite = Potion(TILE_SIZE, x, y)
                     spriteGroup.add(sprite)        
         return spriteGroup
 
@@ -209,14 +218,14 @@ class Level:
         playerX = player.rect.centerx
         directionX = player.direction.x
         if playerX < SCREEN_WIDTH / 2 and directionX < 0:
-            self.worldShift = 8
+            self.worldShift = 12 if self.powerUpIsPlaying else 8
             player.speed = 0
         elif playerX > SCREEN_WIDTH - (SCREEN_WIDTH / 2) and directionX > 0:
-            self.worldShift = -8
+            self.worldShift = -12 if self.powerUpIsPlaying else -8
             player.speed = 0
         else:
             self.worldShift = 0
-            player.speed = 8
+            player.speed = 12 if self.powerUpIsPlaying else 8
     
     def getPlayerOnGround(self):
         '''
@@ -227,6 +236,30 @@ class Level:
             self.playerOnGround = True
         else:
             self.playerOnGround = False
+
+    def playerPowerUp(self):
+        '''
+        Function that detects potion collision.
+        
+        '''
+        player = self.player.sprite
+        if self.powerUpIsPlaying == False:
+            player.powerUp = False
+        # Checking collisions for each collidable sprite 
+        for sprite in self.potionSprites:
+            if sprite.rect.colliderect(player.rect):
+                player.powerUp = True
+                player.health = 12
+                pg.mixer.quit()
+                pg.mixer.init()                
+                chan1 = pg.mixer.Channel(1)
+                sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Song-for-Denise.mp3'))
+                chan1.queue(sound1)
+                chan1.set_volume(0.3)
+                self.songStartTime = pg.time.get_ticks()
+                self.powerUpIsPlaying = True
+                # Remove potion
+                self.potionSprites.remove(sprite)
     
     def resetAllLevel(self):
         '''
@@ -268,11 +301,14 @@ class Level:
         # Run crates
         self.crateSprites.update(self.worldShift)
         self.crateSprites.draw(self.displaySurface)
+        # Run potions
+        self.potionSprites.update(self.worldShift)
+        self.potionSprites.draw(self.displaySurface)
         # Run enemies
         self.skeletonSprites.update(self.worldShift)
         self.constraintSprites.update(self.worldShift)
         self.enemyCollisionReverse()
-        # Hack to fix draw position
+        # Fix draw position
         for skeleton in self.skeletonSprites:
             if skeleton.attacking == True:
                 if skeleton.previousSpeed < 0:
@@ -305,11 +341,26 @@ class Level:
         self.getPlayerOnGround()
         self.verticalMovementCollision()
         self.scrollX()
+        self.playerPowerUp()
         self.resetAllLevel()
-        # Hack to fix draw position
-        self.player.sprite.rect.x -= 25
+        # Fix draw position
+        shift = 50 if self.player.sprite.powerUp else 25
+        self.player.sprite.rect.x -= shift
         self.player.draw(self.displaySurface)
-        self.player.sprite.rect.x += 25
+        self.player.sprite.rect.x += shift
+        # Check song time
+        if (pg.time.get_ticks() > self.songStartTime + 17000 and self.powerUpIsPlaying == True) or self.advanceLevel == True:
+            pg.mixer.quit()
+            pg.mixer.init()
+            if self.advanceLevel == False:
+                if self.player.sprite.health > 5:
+                    self.player.sprite.health = 5                
+                chan1 = pg.mixer.Channel(1)
+                chan1.queue(self.backgroundSong)
+                chan1.set_volume(0.1)
+                self.powerUpIsPlaying = False
+                self.songStartTime = 0
+                self.player.sprite.powerUp = False
         # Update sprites
         self.goal.update(self.worldShift)
         self.goal.draw(self.displaySurface)

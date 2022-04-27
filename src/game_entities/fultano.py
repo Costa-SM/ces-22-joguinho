@@ -21,7 +21,7 @@ class Fultano(pg.sprite.Sprite):
         self.frameIndex = 0
         self.animationSpeed = 0.1
         self.image = self.animations['idle'][self.frameIndex]
-        self.image = pg.transform.scale(self.image, (100, 100))
+        self.image = pg.transform.scale(self.image, (100, 74))
         self.rect = self.image.get_rect(topleft = pos)
         # Health variables
         self.health = FULTANO_HEALTH
@@ -47,6 +47,8 @@ class Fultano(pg.sprite.Sprite):
         self.blinking = False
         self.countHurted = 0
         self.waitHurt = False
+        # Player power-up
+        self.powerUp = False
 
     def importCharacterAssets(self):
         '''
@@ -74,7 +76,10 @@ class Fultano(pg.sprite.Sprite):
             self.frameIndex = 0
         # Update image
         image = animation[int(self.frameIndex)]
-        image = pg.transform.scale(image, (100, 74))
+        if self.powerUp == True:
+            image = pg.transform.scale(image, (140, 74))
+        else:
+            image = pg.transform.scale(image, (100, 74))
         # If the player is taking damage
         if self.blinking == True:
             self.countHurted += 0.1

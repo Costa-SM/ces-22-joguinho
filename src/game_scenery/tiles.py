@@ -140,6 +140,24 @@ class Crate(StaticTile):
         '''
         super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/world/terrain/Crate.png')).convert_alpha())
 
+class Potion(StaticTile):
+    '''
+    Class that represents a potion tile.
+    
+    '''
+    def __init__(self, size, x, y):
+        '''
+        Potion tile class' constructor.
+        :param size: tile size
+        :type size: int
+        :param x: tile x coordinate
+        :type x: int
+        :param y: tile y coordinate
+        :type y: int
+        
+        '''
+        super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/powerup/potion.png')).convert_alpha())
+
 class Decoration(StaticTile):
     '''
     Class that loads the image for a given tile.

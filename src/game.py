@@ -3,7 +3,7 @@ import sys
 from resources import tutorial
 from menus import main, pause, death, authors, win
 from game_scenery.level import Level
-from game_scenery.game_data import level_0, level_1
+from game_scenery.game_data import level_0, level_1, level_2
 from utils import *
 
 # Initialize PyGame
@@ -40,9 +40,11 @@ class Game():
         self.paused = False
         self.restart = False
         # Levels variables
-        self.levels = [level_0, level_1]
+        self.levels = [level_0, level_1, level_2]
         self.level = Level(self.levels[self.currentLevel], self.screen)
-        self.maxLevel = 1
+        self.maxLevel = 2
+        # Background song
+        self.backgroundSong = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
 
     def initScreen(self):
         '''
@@ -58,8 +60,7 @@ class Game():
         '''
         pg.mixer.init()
         chan1 = pg.mixer.Channel(1)
-        sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
-        chan1.queue(sound1)
+        chan1.queue(self.backgroundSong)
         chan1.set_volume(0.1)  
     
     def update(self):
