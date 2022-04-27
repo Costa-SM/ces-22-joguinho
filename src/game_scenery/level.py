@@ -353,8 +353,8 @@ class Level:
             pg.mixer.quit()
             pg.mixer.init()
             if self.advanceLevel == False:
-                if self.player.sprite.health > 5:
-                    self.player.sprite.health = 5                
+                if self.player.sprite.health > 8:
+                    self.player.sprite.health = 8                
                 chan1 = pg.mixer.Channel(1)
                 chan1.queue(self.backgroundSong)
                 chan1.set_volume(0.1)
