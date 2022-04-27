@@ -218,14 +218,14 @@ class Level:
         playerX = player.rect.centerx
         directionX = player.direction.x
         if playerX < SCREEN_WIDTH / 2 and directionX < 0:
-            self.worldShift = 8
+            self.worldShift = 12 if self.powerUpIsPlaying else 8
             player.speed = 0
         elif playerX > SCREEN_WIDTH - (SCREEN_WIDTH / 2) and directionX > 0:
-            self.worldShift = -8
+            self.worldShift = -12 if self.powerUpIsPlaying else -8
             player.speed = 0
         else:
             self.worldShift = 0
-            player.speed = 8
+            player.speed = 12 if self.powerUpIsPlaying else 8
     
     def getPlayerOnGround(self):
         '''
@@ -249,6 +249,7 @@ class Level:
         for sprite in self.potionSprites:
             if sprite.rect.colliderect(player.rect):
                 player.powerUp = True
+                player.health = 12
                 pg.mixer.quit()
                 pg.mixer.init()                
                 chan1 = pg.mixer.Channel(1)
@@ -343,19 +344,23 @@ class Level:
         self.playerPowerUp()
         self.resetAllLevel()
         # Fix draw position
-        self.player.sprite.rect.x -= 25
+        shift = 50 if self.player.sprite.powerUp else 25
+        self.player.sprite.rect.x -= shift
         self.player.draw(self.displaySurface)
-        self.player.sprite.rect.x += 25
+        self.player.sprite.rect.x += shift
         # Check song time
         if (pg.time.get_ticks() > self.songStartTime + 17000 and self.powerUpIsPlaying == True) or self.advanceLevel == True:
             pg.mixer.quit()
             pg.mixer.init()
-            if self.advanceLevel == False:                
+            if self.advanceLevel == False:
+                if self.player.sprite.health > 5:
+                    self.player.sprite.health = 5                
                 chan1 = pg.mixer.Channel(1)
                 chan1.queue(self.backgroundSong)
                 chan1.set_volume(0.1)
                 self.powerUpIsPlaying = False
                 self.songStartTime = 0
+                self.player.sprite.powerUp = False
         # Update sprites
         self.goal.update(self.worldShift)
         self.goal.draw(self.displaySurface)
