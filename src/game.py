@@ -70,7 +70,10 @@ class Game():
         '''
         # Main menu logic
         if not self.start:
-            self.currentLevel = 0
+            if self.level.advanceLevel == False:
+                self.currentLevel = 0
+            else:
+                self.currentLevel = -1
             self.start, self.credits = main(self.start, self.screen, pg.time,  self.credits)
             if self.credits:
                 self.start, self.credits = authors(self.screen)
@@ -106,7 +109,6 @@ class Game():
                 if self.currentLevel == self.maxLevel + 1:
                     # Show win screen
                     self.start = win(self.start, self.screen, pg.time)
-                    self.currentLevel = -1
                 # Just initialize the next level
                 else: 
                     self.initVariables()
