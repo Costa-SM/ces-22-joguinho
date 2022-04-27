@@ -43,6 +43,8 @@ class Game():
         self.levels = [level_0, level_1, level_2]
         self.level = Level(self.levels[self.currentLevel], self.screen)
         self.maxLevel = 2
+        # Background song
+        self.backgroundSong = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
 
     def initScreen(self):
         '''
@@ -58,8 +60,7 @@ class Game():
         '''
         pg.mixer.init()
         chan1 = pg.mixer.Channel(1)
-        sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
-        chan1.queue(sound1)
+        chan1.queue(self.backgroundSong)
         chan1.set_volume(0.1)  
     
     def update(self):

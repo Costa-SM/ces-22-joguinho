@@ -47,6 +47,8 @@ class Fultano(pg.sprite.Sprite):
         self.blinking = False
         self.countHurted = 0
         self.waitHurt = False
+        # Player power-up
+        self.powerUp = False
 
     def importCharacterAssets(self):
         '''
@@ -173,6 +175,16 @@ class Fultano(pg.sprite.Sprite):
         if self.status != 'jump':
             self.direction.y = self.jumpSpeed
 
+    def applyPowerUp(self):
+        '''
+        Power-up function.
+
+        '''
+        if (self.powerUp == True):
+            self.health = 12
+        else:
+            self.health = FULTANO_HEALTH
+
     def update(self):
         '''
         Function that updates Fultano.
@@ -181,4 +193,5 @@ class Fultano(pg.sprite.Sprite):
         self.getInput()
         self.getStatus()
         self.getHealth()
+        self.applyPowerUp()
         self.animate()

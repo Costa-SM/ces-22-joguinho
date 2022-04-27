@@ -28,6 +28,10 @@ class Level:
         self.advanceLevel = False        
         # Layout moving speed
         self.worldShift = 0
+        # Song initialization
+        self.backgroundSong = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
+        self.songStartTime = 0
+        self.powerUpIsPlaying = False
         # Loading player
         self.playerLayout = importCsvLayout(self.levelData['player'])
         self.player = pg.sprite.GroupSingle()
@@ -239,15 +243,20 @@ class Level:
         
         '''
         player = self.player.sprite
+        if self.powerUpIsPlaying == False:
+            player.powerUp = False
         # Checking collisions for each collidable sprite 
         for sprite in self.potionSprites:
             if sprite.rect.colliderect(player.rect):
+                player.powerUp = True
                 pg.mixer.quit()
                 pg.mixer.init()                
                 chan1 = pg.mixer.Channel(1)
                 sound1 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Song-for-Denise.mp3'))
                 chan1.queue(sound1)
-                chan1.set_volume(0.3)  
+                chan1.set_volume(0.3)
+                self.songStartTime = pg.time.get_ticks()
+                self.powerUpIsPlaying = True
                 # Remove potion
                 self.potionSprites.remove(sprite)
     
@@ -298,7 +307,7 @@ class Level:
         self.skeletonSprites.update(self.worldShift)
         self.constraintSprites.update(self.worldShift)
         self.enemyCollisionReverse()
-        # Hack to fix draw position
+        # Fix draw position
         for skeleton in self.skeletonSprites:
             if skeleton.attacking == True:
                 if skeleton.previousSpeed < 0:
@@ -333,10 +342,20 @@ class Level:
         self.scrollX()
         self.playerPowerUp()
         self.resetAllLevel()
-        # Hack to fix draw position
+        # Fix draw position
         self.player.sprite.rect.x -= 25
         self.player.draw(self.displaySurface)
         self.player.sprite.rect.x += 25
+        # Check song time
+        if (pg.time.get_ticks() > self.songStartTime + 17000 and self.powerUpIsPlaying == True) or self.advanceLevel == True:
+            pg.mixer.quit()
+            pg.mixer.init()
+            if self.advanceLevel == False:                
+                chan1 = pg.mixer.Channel(1)
+                chan1.queue(self.backgroundSong)
+                chan1.set_volume(0.1)
+                self.powerUpIsPlaying = False
+                self.songStartTime = 0
         # Update sprites
         self.goal.update(self.worldShift)
         self.goal.draw(self.displaySurface)
