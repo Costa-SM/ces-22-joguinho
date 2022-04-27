@@ -1,11 +1,40 @@
 # Fultano's Tale
 
-Music Copyright
+A classical platformer game, inspired in Super Mario Bros, which tells the history of our great hero, Fultano, in his journey to defeat monsters and evil. This project was an assignment for OOP course at ITA, Brazil.
 
-Fireside Tales by Darren Curtis | https://www.darrencurtismusic.com/
+## Credits
 
-Music promoted on https://www.chosic.com/free-music/all/
+The project uses a lot of free assets and sounds, which we credit and document below.
 
-Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+### Assets
 
-https://creativecommons.org/licenses/by/3.0/
+* [Fultano](https://rvros.itch.io/animated-pixel-hero)
+
+* [Skeleton](https://sanctumpixel.itch.io/sword-skeleton-pixel-art-character)
+
+* [Tiles](https://www.gameart2d.com/freebies.html)
+
+* [Background](https://www.reddit.com/r/PixelArt/comments/5nf8bo/oc_medieval_background/)
+
+### Sounds
+* [Main theme](https://www.darrencurtismusic.com/) by Darren Curtis
+
+* [Special Music](https://www.youtube.com/watch?v=stdyhfeYxxI&ab_channel=ClubMusic80s)
+
+* [Sound Effects](https://mixkit.co/free-sound-effects/)
+
+## Running the Game
+
+With pygame installed, run the main file.
+
+```
+python3 src/main.py
+```
+
+## Images
+
+![This is an image1](/screenshots/main_menu.png)
+
+![This is an image2](/screenshots/playing_1.png)
+
+![This is an image3](/screenshots/playing_2.png)
