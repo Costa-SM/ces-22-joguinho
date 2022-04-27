@@ -3,7 +3,7 @@ import sys
 from resources import tutorial
 from menus import main, pause, death, authors, win
 from game_scenery.level import Level
-from game_scenery.game_data import level_0, level_1
+from game_scenery.game_data import level_0, level_1, level_2
 from utils import *
 
 # Initialize PyGame
@@ -40,9 +40,9 @@ class Game():
         self.paused = False
         self.restart = False
         # Levels variables
-        self.levels = [level_0, level_1]
+        self.levels = [level_0, level_1, level_2]
         self.level = Level(self.levels[self.currentLevel], self.screen)
-        self.maxLevel = 1
+        self.maxLevel = 2
 
     def initScreen(self):
         '''
