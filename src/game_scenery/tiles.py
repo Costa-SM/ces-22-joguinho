@@ -1,6 +1,6 @@
 import os
 import pygame as pg
-from resources import importFolder
+from resources import import_folder
 from utils import BASE_PATH
 
 class Tile(pg.sprite.Sprite):
@@ -73,14 +73,14 @@ class AnimatedTile(Tile):
         '''
         super().__init__(size, x, y)
         # Animation vatiables
-        self.frames = importFolder(path)
-        self.frameIndex = 0
+        self.frames = import_folder(path)
+        self.frame_index = 0
         self.flip = False
         self.size = (100, 96)
-        self.image = self.frames[self.frameIndex]
+        self.image = self.frames[self.frame_index]
         self.image = pg.transform.scale(self.image, self.size)
 
-    def changeState(self, path, flip, size):
+    def change_state(self, path, flip, size):
         '''
         Function that changes the animated tile sprite.
         :param path: sprite's path
@@ -93,9 +93,9 @@ class AnimatedTile(Tile):
         '''
         self.size = size
         self.flip = flip
-        self.frames = importFolder(path)
-        self.frameIndex = 0
-        self.image = self.frames[self.frameIndex]
+        self.frames = import_folder(path)
+        self.frame_index = 0
+        self.image = self.frames[self.frame_index]
         self.image = pg.transform.scale(self.image, self.size)
 
     def animate(self):
@@ -103,10 +103,10 @@ class AnimatedTile(Tile):
         Function that animates the tile.
         
         '''
-        self.frameIndex += 0.15
-        if self.frameIndex >= len(self.frames):
-            self.frameIndex = 0 
-        self.image = self.frames[int(self.frameIndex)]
+        self.frame_index += 0.15
+        if self.frame_index >= len(self.frames):
+            self.frame_index = 0 
+        self.image = self.frames[int(self.frame_index)]
         self.image = pg.transform.scale(self.image, self.size)
         # Flip image
         if self.flip == True:
@@ -156,7 +156,7 @@ class Potion(StaticTile):
         :type y: int
         
         '''
-        super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/powerup/potion.png')).convert_alpha())
+        super().__init__(size, x, y, pg.image.load(os.path.join(BASE_PATH, 'assets/power_up/potion.png')).convert_alpha())
 
 class Decoration(StaticTile):
     '''
@@ -205,5 +205,4 @@ class Decoration(StaticTile):
         # Tile offset
         offsetY = y + size
         self.rect = self.image.get_rect(bottomleft = (x, offsetY))
-
         

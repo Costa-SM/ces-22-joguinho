@@ -19,20 +19,20 @@ class Game():
         Game class' constructor.
         
         '''
-        self.currentLevel = 0
+        self.current_level = 0
         self.initScreen()
-        self.initVariables()
-        self.initMedia()
+        self.init_variables()
+        self.init_media()
 
-    def initVariables(self):
+    def init_variables(self):
         '''
         Function that initializes the game variables.
         
         '''
         # Time variables
         self.clock = pg.time.Clock()
-        self.startTime = 0
-        self.timeSinceEnter = 0
+        self.start_time = 0
+        self.time_since_enter = 0
         # Game variables
         self.start = False
         self.dead = True
@@ -41,10 +41,10 @@ class Game():
         self.restart = False
         # Levels variables
         self.levels = [level_0, level_1, level_2]
-        self.level = Level(self.levels[self.currentLevel], self.screen)
-        self.maxLevel = 2
+        self.level = Level(self.levels[self.current_level], self.screen)
+        self.max_level = 2
         # Background song
-        self.backgroundSong = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
+        self.background_song = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/Fireside-Tales-MP3.mp3'))
 
     def initScreen(self):
         '''
@@ -53,14 +53,14 @@ class Game():
         '''
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    def initMedia(self):
+    def init_media(self):
         '''
         Function that initializes the game sound.
         
         '''
         pg.mixer.init()
         chan1 = pg.mixer.Channel(1)
-        chan1.queue(self.backgroundSong)
+        chan1.queue(self.background_song)
         chan1.set_volume(0.1)  
     
     def update(self):
@@ -70,16 +70,16 @@ class Game():
         '''
         # Main menu logic
         if not self.start:
-            if self.level.advanceLevel == False:
-                self.currentLevel = 0
+            if self.level.advance_level == False:
+                self.current_level = 0
             else:
-                self.currentLevel = -1
+                self.current_level = -1
             self.start, self.credits = main(self.start, self.screen, pg.time,  self.credits)
             if self.credits:
                 self.start, self.credits = authors(self.screen)
-                self.level.resetLevel = False
-            self.startTime = pg.time.get_ticks()
-        self.timeSinceEnter = pg.time.get_ticks() - self.startTime
+                self.level.reset_level = False
+            self.start_time = pg.time.get_ticks()
+        self.time_since_enter = pg.time.get_ticks() - self.start_time
         # Event handler
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -96,22 +96,22 @@ class Game():
         if self.start:
             self.level.run()
         # Set tutorial
-        if self.level.levelData == self.levels[0] and self.timeSinceEnter < 8000:
+        if self.level.level_data == self.levels[0] and self.time_since_enter < 8000:
             tutorial(self.screen)
         # Check if level will reset
-        if self.level.resetLevel == True:
+        if self.level.reset_level == True:
             # Pause music
             pg.mixer.music.pause()
             # Check if the player advanced the level
-            if self.level.advanceLevel == True:
-                self.currentLevel += 1
+            if self.level.advance_level == True:
+                self.current_level += 1
                 # Check if the player reached the final level
-                if self.currentLevel == self.maxLevel + 1:
+                if self.current_level == self.max_level + 1:
                     # Show win screen
                     self.start = win(self.start, self.screen, pg.time)
                 # Just initialize the next level
                 else: 
-                    self.initVariables()
+                    self.init_variables()
                     self.start = True
             # If not, the player died     
             else:
@@ -120,14 +120,14 @@ class Game():
                     self.start, self.restart, self.dead = death(self.start, self.screen, pg.time, self.restart, self.dead)
                 # Initialize the level again
                 else:
-                    self.initVariables()
+                    self.init_variables()
                     self.start = True
             # Restart game logic
             if self.restart == True:
-                self.initVariables()
+                self.init_variables()
                 self.start = True
             # Initialize game music
-            self.initMedia()
+            self.init_media()
         # Screen and time update
         pg.display.update()
         self.clock.tick(60)

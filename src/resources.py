@@ -3,7 +3,7 @@ import os
 from csv import reader
 from utils import TILE_SIZE, BASE_PATH
 
-def importFolder(path):
+def import_folder(path):
     '''
     Function that imports files into a folder.
     :param path: the folder path
@@ -11,16 +11,16 @@ def importFolder(path):
     :rtype: list
 
     '''
-    surfaceList = []
-    for _, __, imageFiles in os.walk(path):
-        imageFiles.sort()
-        for image in imageFiles:
-            fullPath = path + '/' + image
-            imageSurf = pg.image.load(fullPath).convert_alpha()
-            surfaceList.append(imageSurf)
-    return surfaceList
+    surface_list = []
+    for _, __, image_files in os.walk(path):
+        image_files.sort()
+        for image in image_files:
+            full_path = path + '/' + image
+            image_surf = pg.image.load(full_path).convert_alpha()
+            surface_list.append(image_surf)
+    return surface_list
 
-def importCsvLayout(path):
+def import_csv_layout(path):
     '''
     Function that imports .csv level layout.
     :param path: the .csv file path
@@ -28,14 +28,14 @@ def importCsvLayout(path):
     :rtype: list
 
     '''
-    terrainMap = []
+    terrain_map = []
     with open(path) as map:
         level = reader(map, delimiter = ',')
         for row in level:
-            terrainMap.append(list(row))
-        return terrainMap
+            terrain_map.append(list(row))
+        return terrain_map
 
-def importCutGraphics(path):
+def import_cut_graphics(path):
     '''
     Function that cuts tiles.
     :param path: the tile png path
@@ -44,18 +44,18 @@ def importCutGraphics(path):
 
     '''
     surface = pg.image.load(path).convert_alpha()
-    tileNumX = int(surface.get_size()[0] / TILE_SIZE)
-    tileNumY = int(surface.get_size()[1] / TILE_SIZE)
+    tile_num_x = int(surface.get_size()[0] / TILE_SIZE)
+    tile_num_y = int(surface.get_size()[1] / TILE_SIZE)
     # Create the cutted tiles list
-    cutTiles = []
-    for row in range(tileNumY):
-        for col in range(tileNumX):
+    cut_tiles = []
+    for row in range(tile_num_y):
+        for col in range(tile_num_x):
             x = col * TILE_SIZE
             y = row * TILE_SIZE
-            newSurf = pg.Surface((TILE_SIZE, TILE_SIZE), flags = pg.SRCALPHA)
-            newSurf.blit(surface, (0, 0), pg.Rect(x, y, TILE_SIZE, TILE_SIZE))
-            cutTiles.append(newSurf)
-    return cutTiles
+            new_surf = pg.Surface((TILE_SIZE, TILE_SIZE), flags = pg.SRCALPHA)
+            new_surf.blit(surface, (0, 0), pg.Rect(x, y, TILE_SIZE, TILE_SIZE))
+            cut_tiles.append(new_surf)
+    return cut_tiles
 
 class Button(pg.sprite.Sprite):
     '''
@@ -74,24 +74,24 @@ class Button(pg.sprite.Sprite):
         self.size = size
         # Button text and font
         self.text = text
-        self.fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
-        self.font = pg.font.Font(self.fontDir, 30)
-        self.textCol = pg.Color('black')
+        self.font_dir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
+        self.font = pg.font.Font(self.font_dir, 30)
+        self.text_col = pg.Color('black')
         # Window variables
         self.window = window
-        self.mousePos = pg.mouse.get_pos()
+        self.mouse_pos = pg.mouse.get_pos()
         # Button image
         if self.size == 'normal':   
-            self.sprites = importFolder(os.path.join(BASE_PATH, 'assets/buttons/normal_buttons'))
+            self.sprites = import_folder(os.path.join(BASE_PATH, 'assets/buttons/normal_buttons'))
         elif self.size == 'large':
-            self.sprites = importFolder(os.path.join(BASE_PATH,'assets/buttons/large_buttons'))
+            self.sprites = import_folder(os.path.join(BASE_PATH,'assets/buttons/large_buttons'))
         self.image = self.sprites[0]
         self.rect = self.image.get_rect(center = (x,y))
         # Button logic
         self.clicked = False
         self.action = False
 
-    def drawButton(self):
+    def draw_button(self):
         '''
         Draws the button.
         :rtype: bool
@@ -100,23 +100,23 @@ class Button(pg.sprite.Sprite):
         # Update parameters
         self.action = False
         self.rect.center = (self.x, self.y)
-        self.mousePos = pg.mouse.get_pos()
+        self.mouse_pos = pg.mouse.get_pos()
         # Click logic
-        if self.rect.collidepoint(self.mousePos):
+        if self.rect.collidepoint(self.mouse_pos):
             if pg.mouse.get_pressed()[0] == 1:
                 self.clicked = True
                 self.image = self.sprites[1]
             elif pg.mouse.get_pressed()[0] == 0 and self.clicked == True:
-                if self.rect.collidepoint(self.mousePos):
+                if self.rect.collidepoint(self.mouse_pos):
                     self.clicked = False
                     self.action = True
         # Drawing on the window
-        buttonSprite = pg.sprite.Group()
-        buttonSprite.add(self)
-        buttonSprite.draw(self.window)
-        textImg = self.font.render(self.text, True, self.textCol)
-        textLen = textImg.get_width()
-        self.window.blit(textImg, (self.x - self.rect.width/4 - textLen/6, self.y - self.rect.height/4))
+        button_sprite = pg.sprite.Group()
+        button_sprite.add(self)
+        button_sprite.draw(self.window)
+        text_img = self.font.render(self.text, True, self.text_col)
+        text_len = text_img.get_width()
+        self.window.blit(text_img, (self.x - self.rect.width/4 - text_len/6, self.y - self.rect.height/4))
         return self.action
 
 def tutorial(window):
@@ -127,20 +127,20 @@ def tutorial(window):
         
     '''
     # Set font and draw the text
-    fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
-    font = pg.font.Font(fontDir, 30)
-    textCol = pg.Color('white')
-    textImg = font.render("Welcome!", True, textCol)
-    textLen = textImg.get_width()
-    window.blit(textImg, (500 - textLen/2, 100))
-    font = pg.font.Font(fontDir, 20)
-    textImg = font.render("Use arrow keys to move yourself", True, textCol)
-    textLen = textImg.get_width()
-    window.blit(textImg, (500 - textLen/2, 150))
-    textImg = font.render("Use C, F or V to attack", True, textCol)
-    textLen = textImg.get_width()
-    window.blit(textImg, (500 - textLen/2, 200))
-    textImg = font.render("Go ahead and get to the end of each level to win", True, textCol)
-    textLen = textImg.get_width()
-    window.blit(textImg, (500 - textLen/2, 250))
+    font_dir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
+    font = pg.font.Font(font_dir, 30)
+    text_col = pg.Color('white')
+    text_img = font.render("Welcome!", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 100))
+    font = pg.font.Font(font_dir, 20)
+    text_img = font.render("Use arrow keys to move yourself", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 150))
+    text_img = font.render("Use C, F or V to attack", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 200))
+    text_img = font.render("Go ahead and get to the end of each level to win", True, text_col)
+    text_len = text_img.get_width()
+    window.blit(text_img, (500 - text_len/2, 250))
  

@@ -40,7 +40,7 @@ class Enemy(AnimatedTile):
         '''
         self.rect.x += self.speed
         
-    def reverseImage(self):
+    def reverse_image(self):
         '''
         Function that reverses the enemy image
 
@@ -67,9 +67,9 @@ class Enemy(AnimatedTile):
 
         # Change sprite and speed
         flip = True if self.speed < 0 else False
-        self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/attack2'), flip, (200, 130))
+        self.change_state(os.path.join(BASE_PATH, 'assets/skeleton/attack2'), flip, (200, 130))
         self.previous_speed = self.speed
-        self.speed = 0        
+        self.speed = 0
         # Change state
         self.attacking = True
     
@@ -81,7 +81,7 @@ class Enemy(AnimatedTile):
         # Change sprite and speed
         flip = True if self.speed < 0 else False
         self.speed = 0
-        self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/dead_near'), flip, (100, 96))
+        self.change_state(os.path.join(BASE_PATH, 'assets/skeleton/dead_near'), flip, (100, 96))
         
         # Change state
         self.dying = True
@@ -93,14 +93,14 @@ class Enemy(AnimatedTile):
         '''
         self.rect.x += shift
         # State handler
-        if (self.dying == True) and (int(self.frameIndex) == len(self.frames) - 1):
+        if (self.dying == True) and (int(self.frame_index) == len(self.frames) - 1):
             self.died = True
-        if (not self.dying) and (self.attacking == True) and (int(self.frameIndex) == len(self.frames) - 1):
+        if (not self.dying) and (self.attacking == True) and (int(self.frame_index) == len(self.frames) - 1):
             self.attacking = False
             self.speed = self.previous_speed
             flip = False
-            self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/walk'), flip, (100, 96))
+            self.change_state(os.path.join(BASE_PATH, 'assets/skeleton/walk'), flip, (100, 96))
         if (not self.died):
             self.animate()
             self.move()
-            self.reverseImage()
+            self.reverse_image()

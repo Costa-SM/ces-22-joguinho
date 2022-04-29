@@ -19,36 +19,36 @@ def main(start, screen, clock, credited):
     '''
     # Create each button
     play = Button(800, 200, '   Play', screen, 'large')
-    creditos = Button(800, 350, 'Creditos', screen, 'normal')
+    creditos = Button(800, 350, 'Credits', screen, 'normal')
     quit = Button(800, 500, '  Quit', screen, 'normal')
     # Set background and title
     bg = pg.image.load(os.path.join(BASE_PATH, 'assets/background/main_menu.png'))
-    fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
+    font_dir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
     screen.blit(bg, (0,0))
-    titleImg1 = pg.font.Font(fontDir, 70).render('Fultano\'s', True, 'black')
-    titleImg2 = pg.font.Font(fontDir, 70).render('Tale', True, 'black')
-    screen.blit(titleImg1, (50, 50))
-    screen.blit(titleImg2, (50, 150))
+    title_img_1 = pg.font.Font(font_dir, 70).render('Fultano\'s', True, 'black')
+    title_img_2 = pg.font.Font(font_dir, 70).render('Tale', True, 'black')
+    screen.blit(title_img_1, (50, 50))
+    screen.blit(title_img_2, (50, 150))
     # Draw buttons
-    quit.drawButton()
-    creditos.drawButton()
+    quit.draw_button()
+    creditos.draw_button()
     # Main menu loop
     while not start:
         # If play button is clicked
-        if play.drawButton():
+        if play.draw_button():
             start = True
             credited = False
         # If credits button is clicked
-        if creditos.drawButton():
+        if creditos.draw_button():
             credited = True
             start = True
         # Event handler
         for event in pg.event.get():
             # If quit button is clicked
-            if event.type == pg.QUIT or quit.drawButton():
+            if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
             # If credits button is clicked
-            if creditos.drawButton():
+            if creditos.draw_button():
                 credited = True
                 start = True
             # If enter is pressed
@@ -76,26 +76,26 @@ def pause(paused, screen, clock):
     resume = Button(500, 300, ' Resume', screen, 'normal')
     quit = Button(500, 450, '  Quit', screen, 'normal')
     # Set font
-    fontDir = 'fonts/manaspc.ttf'
+    font_dir = 'fonts/manaspc.ttf'
     # Pause menu loop
     while paused:  
         # Set background and text      
         screen.fill((36, 37, 77))
-        textImg = pg.font.Font(fontDir, 70).render('Game Paused', True, 'black')
-        screen.blit(textImg, (250, 100))
+        text_img = pg.font.Font(font_dir, 70).render('Game Paused', True, 'black')
+        screen.blit(text_img, (250, 100))
         # Draw the buttons
-        quit.drawButton()
+        quit.draw_button()
         # If resume button is clicked
-        if resume.drawButton():
+        if resume.draw_button():
             paused = False
             pg.mixer.music.unpause()
         # Event handler
         for event in pg.event.get():
             # If quit button is clicked
-            if event.type == pg.QUIT or quit.drawButton():
+            if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
             # If resume button is clicked or Esc is pressed
-            if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or resume.drawButton():    
+            if (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE) or resume.draw_button():
                 paused = False
                 pg.mixer.music.unpause()
         # Update screen and time
@@ -124,31 +124,31 @@ def death(start, screen, clock, restart, dead):
     reset = Button(500, 400, ' Restart', screen, 'normal')
     quit = Button(500, 500, '  Quit', screen, 'normal')
     # Set font
-    fontDir = 'fonts/manaspc.ttf'
+    font_dir = 'fonts/manaspc.ttf'
     # Death menu loop
     while start and not restart:
         # Set background and text
         screen.fill((36, 37, 77))
-        textImg = pg.font.Font(fontDir, 70).render('Game Over', True, 'black')
-        screen.blit(textImg, (300, 100))
+        text_img = pg.font.Font(font_dir, 70).render('Game Over', True, 'black')
+        screen.blit(text_img, (300, 100))
         # Draw buttons
-        quit.drawButton()
+        quit.draw_button()
         # If restart button is clicked
-        if reset.drawButton():
+        if reset.draw_button():
             restart = True
             dead = False
         # If main menu button is clicked
-        if main.drawButton():
+        if main.draw_button():
             start = False
             dead = False
             pg.mixer.music.unpause()
         # Event handler
         for event in pg.event.get():
             # If quit button is clicked
-            if event.type == pg.QUIT or quit.drawButton():
+            if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
             # If main menu button is clicked
-            if main.drawButton():    
+            if main.draw_button():
                 start = False
                 dead = False
         # Update display and time
@@ -165,37 +165,37 @@ def authors(screen):
 
     '''
     # Set font
-    fontDir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
-    textCol = pg.Color('black')
+    font_dir = os.path.join(BASE_PATH, 'fonts/manaspc.ttf')
+    text_col = pg.Color('black')
     # Credits menu loop
-    while(True):   
+    while(True):
         # Draw the text
-        screen.fill((36, 37, 77))     
-        font = pg.font.Font(fontDir, 40)        
-        textImg = font.render("Credits", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 100))
-        font = pg.font.Font(fontDir, 20)
-        textImg = font.render("Made by", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 200))
-        textImg = font.render("Arthur Stevenson", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 250))
-        textImg = font.render("Eduardo Simplicio", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 300))
-        textImg = font.render("Matheus Ramos", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 350))
-        font = pg.font.Font(fontDir, 30)        
-        textImg = font.render("Thanks for playing!", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 425))
-        font = pg.font.Font(fontDir, 15)
-        textImg = font.render("Press ESC to get back to main menu", True, textCol)
-        textLen = textImg.get_width()
-        screen.blit(textImg, (500 - textLen/2, 465))
+        screen.fill((36, 37, 77))
+        font = pg.font.Font(font_dir, 40)
+        text_img = font.render("Credits", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 100))
+        font = pg.font.Font(font_dir, 20)
+        text_img = font.render("Made by", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 200))
+        text_img = font.render("Arthur Stevenson", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 250))
+        text_img = font.render("Eduardo Simplicio", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 300))
+        text_img = font.render("Matheus Ramos", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 350))
+        font = pg.font.Font(font_dir, 30)        
+        text_img = font.render("Thanks for playing!", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 425))
+        font = pg.font.Font(font_dir, 15)
+        text_img = font.render("Press ESC to get back to main menu", True, text_col)
+        text_len = text_img.get_width()
+        screen.blit(text_img, (500 - text_len/2, 465))
         # Event handler
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -221,25 +221,25 @@ def win(start, screen, clock):
     main = Button(500, 300, '  Menu', screen, 'normal')
     quit = Button(500, 450, '  Quit', screen, 'normal')
     # Set font
-    fontDir = 'fonts/manaspc.ttf'
+    font_dir = 'fonts/manaspc.ttf'
     # Win menu loop
     while start:
         # Set background and text
         screen.fill((36, 37, 77))
-        textImg = pg.font.Font(fontDir, 70).render(' You Won!', True, 'black')
-        screen.blit(textImg, (300, 100))
+        text_img = pg.font.Font(font_dir, 70).render(' You Won!', True, 'black')
+        screen.blit(text_img, (300, 100))
         # Draw buttons
-        quit.drawButton()
+        quit.draw_button()
         # If main menu button is clicked
-        if main.drawButton():
+        if main.draw_button():
             start = False
             pg.mixer.music.unpause()
         # Event handler
         for event in pg.event.get():
-            if event.type == pg.QUIT or quit.drawButton():
+            if event.type == pg.QUIT or quit.draw_button():
                 pg.quit()
             # If main menu button is clicked
-            if main.drawButton():    
+            if main.draw_button():    
                 start = False
         # Update screen and time
         pg.display.update()
