@@ -167,7 +167,7 @@ class Level:
                     chan2 = pg.mixer.Channel(2)
                     sound2 = pg.mixer.Sound(os.path.join(BASE_PATH, 'media/skeleton-dying.mp3'))
                     chan2.queue(sound2)
-                    chan2.set_volume(0.1)  
+                    chan2.set_volume(0.1)
                     # Enemy die
                     sprite.die()
                     self.enemyCollidableSprites.remove(sprite)
@@ -179,8 +179,8 @@ class Level:
                     sprite.attack()                
                     player.blinking = True
                     player.waitHurt = True
-                    self.wrongSide = ((self.player.sprite.rect.x - sprite.rect.x > 0 and sprite.previousSpeed < 0) or
-                                        (sprite.rect.x - self.player.sprite.rect.x > 0 and sprite.previousSpeed > 0))                    
+                    self.wrongSide = ((self.player.sprite.rect.x - sprite.rect.x > 0 and sprite.previous_speed < 0) or
+                                        (sprite.rect.x - self.player.sprite.rect.x > 0 and sprite.previous_speed > 0))                    
                     if(self.wrongSide):
                         sprite.reverse()
 
@@ -308,10 +308,15 @@ class Level:
         self.skeletonSprites.update(self.worldShift)
         self.constraintSprites.update(self.worldShift)
         self.enemyCollisionReverse()
+        
         # Fix draw position
         for skeleton in self.skeletonSprites:
-            if skeleton.attacking == True:
-                if skeleton.previousSpeed < 0:
+            if skeleton.dying:
+                skeleton.rect.y -= 14
+                continue
+            
+            elif (skeleton.attacking == True):
+                if skeleton.previous_speed < 0:
                     skeleton.rect.x -= 90
                     skeleton.rect.y -= 50
                 else:
@@ -323,9 +328,13 @@ class Level:
                 skeleton.rect.x -= 25
                 skeleton.rect.y -= 15
         self.skeletonSprites.draw(self.displaySurface)
-        for skeleton in self.skeletonSprites:
-            if skeleton.attacking == True:
-                if skeleton.previousSpeed < 0:
+        for skeleton in self.skeletonSprites:            
+            if skeleton.dying:
+                skeleton.rect.y += 14
+                continue
+            
+            elif skeleton.attacking == True:
+                if skeleton.previous_speed < 0:
                     skeleton.rect.x += 90
                     skeleton.rect.y += 50
                 else:
@@ -334,6 +343,7 @@ class Level:
             else:
                 skeleton.rect.x += 25
                 skeleton.rect.y += 15
+        
         # Run player
         self.player.update()
         self.horizontalMovementCollision()

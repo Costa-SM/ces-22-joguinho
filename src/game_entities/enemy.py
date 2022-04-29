@@ -26,11 +26,12 @@ class Enemy(AnimatedTile):
         self.speed = randint(1, 2)
         self.rect.height = self.image.get_rect().height - 20
         self.rect.y += 15
-        self.previousSpeed = self.speed
+        self.previous_speed = self.speed
         # Enemy logic
         self.died = False
         self.dying = False
-        self.attacking = False        
+        self.attacking = False
+        self.original_y = self.rect.y
     
     def move(self):
         '''
@@ -53,17 +54,21 @@ class Enemy(AnimatedTile):
 
         '''
         self.speed *= -1
-        self.previousSpeed *= -1
+        self.previous_speed *= -1
 
     def attack(self):
         '''
         Function for enemy to attack
 
         '''
+        # Check if the skeleton is dead before doing anything else
+        if self.died or self.dying:
+            return
+
         # Change sprite and speed
         flip = True if self.speed < 0 else False
         self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/attack2'), flip, (200, 130))
-        self.previousSpeed = self.speed
+        self.previous_speed = self.speed
         self.speed = 0        
         # Change state
         self.attacking = True
@@ -77,6 +82,7 @@ class Enemy(AnimatedTile):
         flip = True if self.speed < 0 else False
         self.speed = 0
         self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/dead_near'), flip, (100, 96))
+        
         # Change state
         self.dying = True
     
@@ -87,14 +93,14 @@ class Enemy(AnimatedTile):
         '''
         self.rect.x += shift
         # State handler
-        if self.dying == True and int(self.frameIndex) == len(self.frames) - 1:
+        if (self.dying == True) and (int(self.frameIndex) == len(self.frames) - 1):
             self.died = True
-        if self.attacking == True and int(self.frameIndex) == len(self.frames) - 1:
+        if (not self.dying) and (self.attacking == True) and (int(self.frameIndex) == len(self.frames) - 1):
             self.attacking = False
-            self.speed = self.previousSpeed
+            self.speed = self.previous_speed
             flip = False
             self.changeState(os.path.join(BASE_PATH, 'assets/skeleton/walk'), flip, (100, 96))
-        if self.died == False:
+        if (not self.died):
             self.animate()
             self.move()
             self.reverseImage()
