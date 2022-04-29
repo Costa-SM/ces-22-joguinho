@@ -74,21 +74,25 @@ class Fultano(pg.sprite.Sprite):
         self.frameIndex += self.animationSpeed
         if self.frameIndex >= len(animation):
             self.frameIndex = 0
+        
         # Update image
         image = animation[int(self.frameIndex)]
         if self.powerUp == True:
             image = pg.transform.scale(image, (140, 74))
         else:
             image = pg.transform.scale(image, (100, 74))
+        
         # If the player is taking damage
         if self.blinking == True:
             self.countHurted += 0.1
             if int(self.countHurted) % 2 == 1 and self.countHurted > 1.3 and not self.waitHurt:
                 image = pg.Surface((100, 74), pg.SRCALPHA, 16)
+        
         if int(self.countHurted) >= self.timeHurted:
             self.countHurted = 0
             self.blinking = False
-        # If the image needs to be fliped
+        
+        # If the image needs to be flipped
         if self.facingRight:
             self.image = image
         else:
@@ -111,6 +115,7 @@ class Fultano(pg.sprite.Sprite):
                     self.jump()                
                 return            
             self.collisionSide = None
+        
         # Key input logic
         if keys[pg.K_RIGHT] and not self.attacking:
             self.direction.x = 1
@@ -120,7 +125,7 @@ class Fultano(pg.sprite.Sprite):
             self.facingRight = False
         else:
             self.direction.x = 0
-        if keys[pg.K_UP] and self.onGround:
+        if keys[pg.K_UP] and self.onGround and not self.attacking:
             self.jump()
         if (keys[pg.K_c] or keys[pg.K_f] or keys[pg.K_v]) and self.onGround and self.direction.x == 0:
             self.attacking = True
