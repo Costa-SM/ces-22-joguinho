@@ -12,14 +12,14 @@ The project uses a lot of free assets and sounds, which we credit and document b
 
 * [Skeleton](https://sanctumpixel.itch.io/sword-skeleton-pixel-art-character)
 
-* [Tiles](https://www.gameart2d.com/freebies.html)
+* [Tiles](https://www.gameart2d.com/free-graveyard-platformer-tileset.html)
 
 * [Background](https://www.reddit.com/r/PixelArt/comments/5nf8bo/oc_medieval_background/)
 
 ### Sounds
 * [Main theme](https://www.darrencurtismusic.com/) by Darren Curtis
 
-* [Special Music](https://www.youtube.com/watch?v=stdyhfeYxxI&ab_channel=ClubMusic80s)
+* [Song for Denise 8 bit Version](https://www.youtube.com/watch?v=abcAEmG4BMU&t=49s) by Musikage
 
 * [Sound Effects](https://mixkit.co/free-sound-effects/)
 
