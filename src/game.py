@@ -52,6 +52,9 @@ class Game():
         
         '''
         self.screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pg.display.set_caption("Fultano's Tale")
+        pg.display.set_allow_screensaver(False)
+        pg.display.set_icon(pg.image.load(os.path.join(BASE_PATH, 'assets/fultano/icon.png')).convert_alpha())
 
     def init_media(self):
         '''
